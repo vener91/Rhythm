@@ -1,3 +1,28 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#signup-btn").on('click', function(){
+            $("#email-input-div").slideDown();
+            $("#login-btn-span").fadeOut(300);
+            $("#username-input").focus();
+        });
+    });
+</script>
 <div id="login-div">
     <img src="res/img/system/logo.png" alt="logo"/>
+    <div>
+        <form>
+            <div id="login-inputs">
+                <div>Username <input id="username-input" type="text" name="username" placeholder="username" /></div>
+                <div>Password <input type="text" name="password" placeholder="password" /></div>
+                <div id="email-input-div" class="hidden">Email <input type="email" name="email" placeholder="email address" /></div>
+                <div id="remember-input-div"><label><input type="checkbox" name="remember"/> Remember Me</label></div>
+            </div>
+            <div id="login-btns">
+                <span id="login-btn-span"><a class="button blue" id="login-btn">Login</a> or </span><a class="button" id="signup-btn">Sign Up</a>
+            </div>
+        </form>
+    </div>
 </div>
+<div></div>
+    
+<div id="copyright"> Rhythm by Nest Games </div>
