@@ -26,6 +26,7 @@ app.configure(function(){
 });
 //Include Controllers here
 require('./app/controller/site')(app);
+require('./app/controller/user')(app);
 if (!module.parent) {
     app.listen(80);
     console.log('Rhythm server started');
