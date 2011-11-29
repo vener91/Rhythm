@@ -6,6 +6,7 @@ var app = module.exports = express.createServer();
 app.register('.html', require('ejs'));
 app.set('views', __dirname + '/app/view');
 app.set('view engine', 'html');
+app.set("view options", { layout: "layout" });
 
 //Set up ExpressJS
 
@@ -27,6 +28,13 @@ app.configure(function(){
 //Include Controllers here
 require('./app/controller/site')(app);
 require('./app/controller/user')(app);
+
+//Include libraries
+app.db = require('./lib/mysql').db;
+app.crpyto = require('crypto');
+app.sha1 = function(text){
+    return this.crpyto.createHash('sha1').update(text).digest('hex');
+}
 if (!module.parent) {
     app.listen(80);
     console.log('Rhythm server started');

@@ -5,8 +5,9 @@
 
 module.exports = function(app){
     app.get('/', function(req, res){
-        res.render('dash', {
-            title: 'Rhythm Project'
+        res.render('site', {
+            title: 'Rhythm Project',
+            username: 'BeatsTap',
         });
     });
 };

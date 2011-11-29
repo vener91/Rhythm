@@ -24,11 +24,13 @@ input[type='checkbox']{
     margin-top: 10px;
 }
 
+
 /* Modes */
 .hidden{
     display:none;
 }
 
+/* Site */
 #copyright{
     margin: 30px auto 0px auto;
     color: #999;
@@ -72,7 +74,53 @@ input[type='checkbox']{
     margin-right: auto;
     border-radius: 5px;
 }
+/* Dashboard */
+#song-div{
+    float: left;
+    width:300px;
+    padding:20px 0px 20px 20px;
+}
 
+#songs-list{
+    color: #fff;
+    list-style: none;
+}
+
+#songs-list > li{
+    padding: 5px;
+    height: 20px;
+}
+
+#songs-list > li.lvl-1{
+    background-color: rgba(223, 128, 255, 0.4);
+}
+
+#songs-list > li div.song-name{
+    float: left;
+}
+
+#songs-list > li div.artist{
+    float: right;
+    color: #999;
+}
+
+#song-dash-div{
+    float: right;
+    width: 100%;
+    margin-left: -320px;
+}
+
+#song-dash-div > div{
+    margin-left: 320px;
+    color:#EFEFEF;
+    border-radius:5px;
+}
+
+#song-dash-div > div{
+    overflow:auto;
+    padding:20px 10px 5px 10px;
+}
+    
 /* Page Elements */
 
 /*Button*/
@@ -104,3 +152,32 @@ input[type='checkbox']{
 
 .blue.button, .blue.button:visited { background-color: #2981e4; }
 .blue.button:hover { background-color: #2575cf; }
+
+.mushroom-title{
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-color: rgba(99,99,99,0.6);
+    color: #efefef;
+    text-align: center;
+    padding-top 5px;
+    padding-bottom: 5px;
+}
+
+.mushroom-sandwich{
+    padding: 5px;
+    background: #333 -webkit-linear-gradient(top, rgba(33, 33, 33, .6), rgba(200, 200, 200, .2), rgba(33, 33, 33, .6));
+    background: #333 -moz-linear-gradient(bottom, rgba(0, 0, 0, .2), rgba(255, 255, 255, .3), rgba(0, 0, 0, .2));
+}
+
+.mushroom-sandwich > input[type='search']{
+    width: 290px; /* 300 - 5 - 5*/
+    border-radius: 30px;
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 5px;
+}
+
+.mushroom-sandwich > input[type='search']:focus{
+    outline: none;
+}
