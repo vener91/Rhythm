@@ -1,0 +1,172 @@
+/* Rhythm Player */
+
+@-webkit-keyframes player-pulse {
+    0% {
+       opacity: 0.8;
+        bottom: 10px;
+    }
+    50% {
+       opacity: 0.6;
+        bottom: 8px;
+    }
+    100% {
+       opacity: 0.8;
+        bottom: 10px;
+    }
+}
+
+#player-load{
+    background-image: url("../img/system/bg.jpg");
+    height:100%;
+    width:100%;
+    position:fixed;
+    z-index:99;
+}
+
+#player-load-info{
+    margin: 160px auto 0px auto;
+    width: 800px;
+    text-align: center;
+    bottom: 0px;
+}
+
+#player-load-info > div{
+    display: inline;
+    padding-right: 125px;
+}
+
+#player-load-info > img{
+    border: 5px white solid;
+    width: 270px;
+    margin-right: 35px;
+    display: inline;
+}
+
+#player-play-btn {
+    text-align: center;
+    margin-top: 10px;
+    width: 120px;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+    font-size: 25px;
+    color: #CCC;
+}
+
+#player-play-btn:hover{
+    color: #fff;
+}
+
+#player-play-loading{
+    top: 25px;
+    position: relative;
+}
+
+#player-play-loading > div{
+    background-color: #2187E7;
+    background-image: -moz-linear-gradient(90deg, #2187e7 25%, #a0eaff);
+    background-image: -webkit-linear-gradient(90deg, #2187e7 25%, #a0eaff);
+    width: 3px;
+    height: 3px;
+    border-radius: 50px;
+    box-shadow: 0 0 5px #00c6ff;
+    margin: 0 auto;
+}
+
+.player-bg{
+    background-color: rgba(0,0,0,0.3); /*Black semi transparent background*/
+    width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.player-bg canvas{
+    width: 100%;
+    position: relative;
+    z-index: 20;
+}
+
+.player-stats{
+    position: fixed;
+    left: 0px;
+    bottom: 0px;   
+}
+
+.player-msg-canvas{
+    height: 200px;
+    width: 350px;
+    position: relative;
+    bottom: 200px;
+    margin-top: -200px;
+}
+
+.player-target{
+    background-image: url("../skin/rhythm/key-target.png");
+    height: 12px;
+    width: 350px;
+    position: relative;
+    margin: -12px auto auto auto;
+    bottom: 10px;
+    opacity: 0.8;
+    -webkit-animation-name: player-pulse;
+    -webkit-animation-duration: 0.3s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease-in-out;
+    z-index: -1;
+}
+
+.player-keys{
+    background-color: rgba(0,0,0,0.3); /*Black semi transparent background*/
+    height: 72px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 350px;
+}
+
+.player-keys > div{
+    height: 522px;
+    margin-top: -450px;
+    float: left;
+    z-index: 20;
+}
+
+.player-keys > .key-white-left{
+    background-image: url("../skin/rhythm/key-white-left.png");
+    width: 71px
+}
+
+.player-keys > .key-white-left.pressed{
+    background-image: url("../skin/rhythm/key-white-left-p.png");
+}
+
+.player-keys > .key-white-right{
+    background-image: url("../skin/rhythm/key-white-right.png");
+    width: 71px;
+}
+
+.player-keys > .key-white-right.pressed{
+    background-image: url("../skin/rhythm/key-white-right-p.png");
+}
+
+.player-keys > .key-blue{
+    background-image: url("../skin/rhythm/key-blue.png");
+    width: 40px;
+    margin-left: -20px;
+    margin-right: -20px;
+    position: relative;
+    left: -71px;
+    z-index: 3;
+}
+
+.player-keys > .key-blue.pressed{
+    background-image: url("../skin/rhythm/key-blue-p.png");
+}
+
+.player-keys > .key-gold{
+    background-image: url("../skin/rhythm/key-gold.png");
+    width: 66px;
+}
+
+.player-keys > .key-gold.pressed{
+    background-image: url("../skin/rhythm/key-gold-p.png");
+}
