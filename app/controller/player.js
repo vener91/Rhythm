@@ -9,7 +9,7 @@ module.exports = function(app){
 	        layout: 'page-layout',
             scripts: ['player', 'webgl-2d'],
             styles: ['player'],
-            title: 'Rhythm Project'
+            title: app.title + ' - Player'
         });
     });
 };
