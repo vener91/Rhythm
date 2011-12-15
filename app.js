@@ -21,6 +21,7 @@ app.set("view options", { layout: "layout" });
 
 //Set up ExpressJS
 app.configure(function(){
+    app.title = 'Rhythm Project';
     app.use(express.logger('\x1b[33m:method\x1b[0m \x1b[32m:url\x1b[0m :response-time'));
     app.use(express.bodyParser());
     app.use(express.methodOverride());
