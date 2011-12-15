@@ -19,9 +19,10 @@ module.exports = function(app){
                 res.render('dash', {
                     title: 'Rhythm Project - Dashboard'
                 });
+                //Add notification to thank user for signing up
+                app.user(req.body.username).notify("Thanks for signing up")
             });
         }
-    //Add notification to thanks user for signing up
     });
     
     app.user = function(username){

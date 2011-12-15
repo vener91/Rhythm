@@ -5,7 +5,9 @@
                 $("#email-input-div").slideDown();
                 $("#login-btn-span").fadeOut(300);
                 $("#username-input").focus();
-                $("form").attr("action", "signup");    
+                $(this).addClass('blue')
+                $("form").attr("action", "signup");
+                
             }else{
                 $("form").trigger("submit");
             }

@@ -4,10 +4,15 @@
     padding: 0px;
 }
 
+html{
+    height: 100%;
+}
+
 body{
     background-image: url("../img/system/bg.jpg");
     color: #fff;
-    font-family: "Lucida Sans Unicode", "Verdana"
+    font-family: "Lucida Sans Unicode", "Verdana";
+    height: 100%;
 }
 
 #wrap{
@@ -120,10 +125,9 @@ input[type='checkbox']{
     overflow:auto;
     padding:20px 10px 5px 10px;
 }
-    
 /* Page Elements */
 
-/*Button*/
+/* Button */
 .button, .button:visited {
     font-size: 15px;
     background: #222 url("../img/system/overlay.png") repeat-x;

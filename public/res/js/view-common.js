@@ -1,48 +1,35 @@
-/*
- * jQuery Web Sockets Plugin v0.0.1
- * http://code.google.com/p/jquery-websocket/
- *
- * This document is licensed as free software under the terms of the
- * MIT License: http://www.opensource.org/licenses/mit-license.php
- * 
- * Copyright (c) 2010 by shootaroo (Shotaro Tsubouchi).
- */
 (function($){
-$.extend({
-	websocketSettings: {
-		open: function(){},
-		close: function(){},
-		message: function(){},
-		options: {},
-		events: {}
-	},
-	websocket: function(url, s) {
-		var ws = WebSocket ? new WebSocket( url ) : {
-			send: function(m){ return false },
-			close: function(){}
-		};
-		$(ws)
-			.bind('open', $.websocketSettings.open)
-			.bind('close', $.websocketSettings.close)
-			.bind('message', $.websocketSettings.message)
-			.bind('message', function(e){
-				var m = $.evalJSON(e.originalEvent.data);
-				var h = $.websocketSettings.events[m.type];
-				if (h) h.call(this, m);
-			});
-		ws._settings = $.extend($.websocketSettings, s);
-		ws._send = ws.send;
-		ws.send = function(type, data) {
-			var m = {type: type};
-			m = $.extend(true, m, $.extend(true, {}, $.websocketSettings.options, m));
-			if (data) m['data'] = data;
-			return this._send($.toJSON(m));
-		}
-		$(window).unload(function(){ ws.close(); ws = null });
-		return ws;
-	}
-});
+	var viewOptions = {
+        state: 'default', //Variations of view
+    };
+
+    /*
+     * @var offset value of offset against the window
+     */
+    $.fn.setFluid = function(offset, count, callback) {
+        var resizeObj = $(this);
+        if(typeof(offset) == 'undefined'){
+            offset = 0;
+        }
+        if(typeof(count) == 'undefined'){
+            count = resizeObj.length;
+        }
+        resizeElement(resizeObj, offset, count, callback);
+        $(window).bind('resize').bind('resize',function(){
+            resizeElement(resizeObj, offset, count, callback);
+        });
+        return resizeObj;
+    }
+
+    function resizeElement(resizeObj, offset, count, callback){
+        var height = Math.floor($(window).height() - offset)/count;
+        resizeObj.css('height', height);
+        if ( count == 2 && ($(window).height()-offset)%2 == 1){
+            $('iframe:visible:first').css('height',($('iframe:visible:first').height()+1));
+        }
+        if(typeof(callback) === 'function'){
+            callback(height);
+        }
+    }
+
 })(jQuery);
-
-
-//Start of view code
