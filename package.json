@@ -3,7 +3,7 @@
   "description": "Rhythm game on the web",
   "version": "0.0.1",
   "author": "Ter Chrng Ng <vener88@gmail.com>",
-  "scripts": { "start": " node ./app.js" }
+  "scripts": { "start": "node app.js" },
   "dependencies": {
     "express": ">= 1.5.2",
     "socket.io": ">= 0.8.7",
