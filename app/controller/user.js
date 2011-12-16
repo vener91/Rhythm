@@ -4,10 +4,8 @@
  */
 
 module.exports = function(app){
-    app.post('/login', function(req, res){
-        res.render('dash', {
-            title: 'Rhythm Project - Dashboard'
-        });
+    app.post('/login',passport.authenticate('local', { failureRedirect: '/' }), function(req, res){
+        res.redirect('/dash');
     });
     app.post('/signup', function(req, res){
         

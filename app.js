@@ -1,4 +1,5 @@
 var express = require('./config.js');
+var passport = require('passport');
 
 //Main start point
 var express = require('express');
@@ -29,6 +30,8 @@ app.configure(function(){
     app.use(express.session({
         secret: 'rhythm'
     }));
+    app.use(passport.initialize());
+    app.use(passport.session());
     app.use(app.router);
     app.use(express.static(__dirname + '/public'));
     app.use(express.errorHandler({

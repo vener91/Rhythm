@@ -14,6 +14,7 @@ var games = new Schema({
   }
 });
 
+
 var game = mongoose.model('Game', Game);
 
 User = {
