@@ -3,7 +3,7 @@
         $("#signup-btn").on("click", function(){
             if(!$("#email-input-div").is(":visible")){ //Check if clicked onced
                 $("#email-input-div").slideDown();
-                $("#login-btn-span").fadeOut(300);
+                $("#login-btn-span, #login-btn-facebook > img").fadeOut(300);
                 $("#username-input").focus();
                 $(this).addClass('blue')
                 $("form").attr("action", "signup");
@@ -29,7 +29,7 @@
                 <div id="remember-input-div"><label><input type="checkbox" name="remember"/> Remember Me</label></div>
             </div>
             <div id="login-btns">
-                <a href="/auth/facebook"><img id="login-btn-facebook" src="res/img/system/login-with-facebook.png" alt="facebook login" /></a> <span id="login-btn-span"><a class="button blue" id="login-btn">Login</a> or </span><a class="button" id="signup-btn">Sign Up</a>
+                <a id="login-btn-facebook" href="/auth/facebook"><img src="res/img/system/login-with-facebook.png" alt="facebook login" /></a> <span id="login-btn-span"><a class="button blue" id="login-btn">Login</a> or </span><a class="button" id="signup-btn">Sign Up</a>
             </div>
         </form>
     </div>

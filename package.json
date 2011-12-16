@@ -3,6 +3,7 @@
   "description": "Rhythm game on the web",
   "version": "0.0.1",
   "author": "Ter Chrng Ng <vener88@gmail.com>",
+  "scripts": { "start": " node ./app.js" }
   "dependencies": {
     "express": ">= 1.5.2",
     "socket.io": ">= 0.8.7",
@@ -13,5 +14,5 @@
   "keywords": ["express"],
   "repository": "git://github.com/vener91/Rhythm.git",
   "main": "index",
-  "engines": { "node": ">= 0.6.5 < 0.7.0" }
+  "engines": { "node": "latest" }
 }
