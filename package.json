@@ -14,5 +14,5 @@
   "keywords": ["express"],
   "repository": "git://github.com/vener91/Rhythm.git",
   "main": "index",
-  "engines": { "node": "latest" }
+  "engines": { "node": ">= 0.4.6" }
 }
