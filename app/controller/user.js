@@ -1,12 +1,11 @@
-
 /**
  * Module dependencies.
  */
-
 module.exports = function(app){
-    app.post('/login',passport.authenticate('local', { failureRedirect: '/' }), function(req, res){
+    app.post('/auth/local', app.passport.authenticate('local', { failureRedirect: '/' }), function(req, res){
         res.redirect('/dash');
     });
+
     app.post('/signup', function(req, res){
         
         if(true){ //If user/email combo does not exist

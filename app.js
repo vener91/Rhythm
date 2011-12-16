@@ -1,10 +1,12 @@
-var express = require('./config.js');
-var passport = require('passport');
-
+var express = require('./config.js')
+, passport = require('passport')
 //Main start point
-var express = require('express');
-var app = module.exports = express.createServer();
-var io = require('socket.io').listen(app);
+, express = require('express')
+, app = module.exports = express.createServer()
+, io = require('socket.io').listen(app)
+//Libraries
+, auth = require('./lib/auth.js');
+
 
 //Set up constant
 const VERIFY_FAILED = 1;
@@ -30,8 +32,10 @@ app.configure(function(){
     app.use(express.session({
         secret: 'rhythm'
     }));
-    app.use(passport.initialize());
-    app.use(passport.session());
+    //Passport
+    app.passport = auth.configurePassport(passport);
+    app.use(app.passport.initialize());
+    app.use(app.passport.session());
     app.use(app.router);
     app.use(express.static(__dirname + '/public'));
     app.use(express.errorHandler({
@@ -62,6 +66,7 @@ app.helpers({
 //Include Controllers here
 require('./app/controller/site')(app);
 require('./app/controller/player')(app);
+require('./app/controller/auth')(app);
 require('./app/controller/user')(app);
 
 //Include libraries

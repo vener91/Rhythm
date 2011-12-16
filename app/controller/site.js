@@ -8,7 +8,7 @@ module.exports = function(app){
         res.render('site', {
             title: 'Rhythm Project',
             scripts: [],
-            styles: [],
+            styles: ['site'],
             username: 'BeatsTap',
         });
     });
