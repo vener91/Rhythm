@@ -6,7 +6,7 @@
                 $("#login-btn-span, #login-btn-facebook > img").fadeOut(300);
                 $("#username-input").focus();
                 $(this).addClass('blue')
-                $("form").attr("action", "signup");
+                $("form").attr("action", "user/signup");
                 
             }else{
                 $("form").trigger("submit");
@@ -21,7 +21,7 @@
 <div id="login-div">
     <img src="res/img/system/logo.png" alt="logo"/>
     <div>
-        <form name="login-signup" action="signup" method="post">
+        <form name="login-signup" action="auth/local" method="post">
             <div id="login-inputs">
                 <div>Username <input id="username-input" type="text" name="username" placeholder="username" /></div>
                 <div>Password <input type="password" name="password" placeholder="password" /></div>

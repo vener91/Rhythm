@@ -1,20 +1,19 @@
-var express = require('./config.js')
-, passport = require('passport')
 //Main start point
-, express = require('express')
+var express = require('express')
 , app = module.exports = express.createServer()
 , io = require('socket.io').listen(app)
-//Libraries
-, auth = require('./lib/auth.js');
+, fs = require('fs')
 
+//Libraries
+, passport = require('passport')
+, auth = require('./lib/auth.js')
+, mongoose = require('mongoose')
+, validator = require('validator')
+, config = require('./config.js')
 
 //Set up constant
 const VERIFY_FAILED = 1;
 const CONNETION_FAILED = 2;
-
-
-//Set up mongoDB
-
 
 //Set up views
 app.register('.html', require('ejs'));
@@ -32,10 +31,20 @@ app.configure(function(){
     app.use(express.session({
         secret: 'rhythm'
     }));
+
+    //Database MongoDB
+    app.mg = mongoose;
+    app.mg.connect('mongodb://localhost/rhythm');
+
+    //Validator
+    app.check = validator.check;
+    app.sanitize = validator.sanitize;
+
     //Passport
-    app.passport = auth.configurePassport(passport);
+    app.passport = auth.configurePassport(app, passport);
     app.use(app.passport.initialize());
     app.use(app.passport.session());
+    
     app.use(app.router);
     app.use(express.static(__dirname + '/public'));
     app.use(express.errorHandler({
@@ -62,10 +71,10 @@ app.helpers({
     }
 });
 
-
 //Include Controllers here
 require('./app/controller/site')(app);
 require('./app/controller/player')(app);
+require('./app/controller/dash')(app);
 require('./app/controller/auth')(app);
 require('./app/controller/user')(app);
 

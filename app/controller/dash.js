@@ -1,13 +1,9 @@
-
-/**
- * Module dependencies.
- */
-
 module.exports = function(app){
-    app.post('/dash',passport.authenticate('local', { failureRedirect: '/' }), function(req, res){
+    app.get('/dash', function(req, res){
         res.render('dash', {
-            title: app.title + '- Dashboard'
+            title: app.title + '- Dashboard',
+            scripts: [],
+            styles: [],
         });
-    });
+	});
 };
-        
