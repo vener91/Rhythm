@@ -7,11 +7,10 @@ module.exports = function(app){
             if(err == null && user == null){
                 //Add user
                 var user = new User();
-                user.name     = req.body.username;
-                user.password = req.body.password;
+                user.username = req.body.username;
+                user.password = User.hashPassword(req.body.password);
                 user.email    = req.body.email;
                 user.save(function (err) {
-                    console.info(err);
                     if(err == null){
                         //Add user to session
                         req.session.login = true;

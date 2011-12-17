@@ -7,7 +7,7 @@ module.exports = function(app){
   , ObjectId = Schema.ObjectId;
 
   var UserSchema = new Schema({
-    name: { type: String, validate: [function(v){
+    username: { type: String, validate: [function(v){
       try{
         app.check(v).notContains(' '); 
       }catch(e){
@@ -26,7 +26,12 @@ module.exports = function(app){
       }, 'Invalid Email']},
     join_date: { type: Date, default: Date.now }
   });
-  return app.mg.model('user', UserSchema);
+  var userModel = app.mg.model('user', UserSchema);
+  var crpyto = require('crypto');
+  userModel.hashPassword = function(text){
+      return crpyto.createHash('sha1').update(text).digest('hex');
+  };
+  return userModel;
 
   var test = {
     create: function(data, callback){

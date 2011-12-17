@@ -78,11 +78,6 @@ require('./app/controller/dash')(app);
 require('./app/controller/auth')(app);
 require('./app/controller/user')(app);
 
-//Include libraries
-app.crpyto = require('crypto');
-app.sha1 = function(text){
-    return this.crpyto.createHash('sha1').update(text).digest('hex');
-};
 if (!module.parent) {
     app.listen(80);
     console.log('Rhythm server started');

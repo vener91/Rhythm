@@ -4,7 +4,7 @@
  */
 
 module.exports = function(app){
-    app.get('/', function(req, res, next) { if (req.isAuthenticated()) { res.redirect('/dash') }}, function(req, res){
+    app.get('/', function(req, res, next) { if (req.isAuthenticated()) { res.redirect('/dash'); } else { next(); } }, function(req, res){
         res.render('site', {
             title: 'Rhythm Project',
             scripts: [],
@@ -13,12 +13,11 @@ module.exports = function(app){
         });
     });
     app.get('/err', function(req, res){
-    	res.render('site', {
+        res.render('site', {
             title: 'Rhythm Project',
             scripts: [],
             styles: ['site'],
             err: '',
-            username: 'BeatsTap',
         });
     });
 };

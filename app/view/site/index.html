@@ -7,11 +7,12 @@
                 $("#username-input").focus();
                 $(this).addClass('blue')
                 $("form").attr("action", "user/signup");
-                
             }else{
                 $("form").trigger("submit");
             }
-            
+        });
+        $(document).bind('keydown', 'return', function(){
+            $("form").trigger("submit");
         });
         $("#login-btn").on("click", function(){
             $("form").trigger("submit");
