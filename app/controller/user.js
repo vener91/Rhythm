@@ -4,7 +4,7 @@ module.exports = function(app){
 
     app.post('/user/signup', function(req, res){
         User.findOne({email: req.body.email}, function(err, user) {
-            if(err == null && user == null){
+            if(!err && !user){
                 //Add user
                 var user = new User();
                 user.username = req.body.username;
@@ -12,15 +12,16 @@ module.exports = function(app){
                 user.email    = req.body.email;
                 user.save(function (err) {
                     if(err == null){
-                        //Add user to session
-                        req.session.login = true;
-                        res.redirect('/dash');
-                        //Add notification to thank user for signing up
-                        //app.user(req.body.username).notify("Thanks for signing up")
+                        //Auto auth this user
+                        app.passport.authenticate('local', { failureRedirect: '/' })(req, res, function(){
+                            res.redirect('/dash');
+                            //Add notification to thank user for signing up
+                            //app.user(req.body.username).notify("Thanks for signing up")    
+                        });
                     }else{
                         res.redirect('/err/');
                     }
-                });    
+                });
             }
         });
     });
