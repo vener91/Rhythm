@@ -25,8 +25,7 @@ module.exports = function(app){
       return true;
       }, 'Invalid Email']},
     facebook_id: { type: String },
-    join_date: { type: Date, default: Date.now },
-    verified: { type: boolean, default: false }
+    join_date: { type: Date, default: Date.now }
   });
   var userModel = app.mg.model('user', UserSchema);
   var crpyto = require('crypto');
