@@ -7,7 +7,7 @@
     <div id="login-div">
         <form name="login" action="auth/local" method="post">
             <input id="username-input" type="text" name="username" placeholder="Username" />
-            <input type="password" name="password" placeholder="Password" /> <submit class="button blue" id="login-btn">Login</submit>
+            <input type="password" name="password" placeholder="Password" /> <input id="login-btn" class="button blue" type="submit" value="Login" />
             <div id="remember-input-div"><label><input type="checkbox" name="remember"/> Remember</label> <a id="login-forgot" href="user/forgot">Forgotten?</a></div>
             <a id="login-btn-facebook" href="/auth/facebook"><img src="res/img/system/login-with-facebook.png" alt="facebook login" /></a> 
         </form>
@@ -17,6 +17,8 @@
     <div id="content-div">
         <h1>Game of the internets</h1>
         <p>Be part of the jaming community and earn your title as top player.</p>
+        <a id="learn-more-link">Learn more</a>
+
     </div>
     <div id="signup-div">
         <form name="signup" action="user/signup" method="post">
@@ -27,7 +29,7 @@
                 <input type="email" name="email" placeholder="Email" />
             </div>
             <div id="login-btns">
-                <submit class="button" id="signup-btn">Sign Up</submit>
+                <input type="submit" class="button" id="signup-btn" value="Sign Up" />
             </div>
         </form>
     </div>
