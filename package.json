@@ -8,7 +8,6 @@
     "express": ">= 1.5.2",
     "ejs": "0.6.1",
     "socket.io": ">= 0.8.7",
-    "connect-auth": ">= 0.4.1",
     "mongoose": ">= 2.4.5",
     "passport": ">= 0.1.3",
     "passport-facebook": ">=0.1.1",
