@@ -1,36 +1,33 @@
 <script type="text/javascript">
     $(document).ready(function(){
-        $("#signup-btn").on("click", function(){
-            if(!$("#email-input-div").is(":visible")){ //Check if clicked onced
-                $("#email-input-div").slideDown();
-                $("#login-btn-span, #login-btn-facebook > img").fadeOut(300);
-                $("#username-input").focus();
-                $(this).addClass('blue')
-                $("form").attr("action", "user/signup");
-            }else{
-                $("form").trigger("submit");
-            }
-        });
-        $(document).bind('keydown', 'return', function(){
-            $("form").trigger("submit");
-        });
-        $("#login-btn").on("click", function(){
-            $("form").trigger("submit");
-        });
     });
 </script>
-<div id="login-div">
-    <img src="res/img/system/logo.png" alt="logo"/>
-    <div>
-        <form name="login-signup" action="auth/local" method="post">
-            <div id="login-inputs">
-                <div>Username <input id="username-input" type="text" name="username" placeholder="username" /></div>
-                <div>Password <input type="password" name="password" placeholder="password" /></div>
-                <div id="email-input-div" class="hidden">Email <input type="email" name="email" placeholder="email address" /></div>
-                <div id="remember-input-div"><label><input type="checkbox" name="remember"/> Remember Me</label></div>
+<div id="header-div">
+    <img id="logo-img" src="res/img/system/logo.png" alt="logo"/>
+    <div id="login-div">
+        <form name="login" action="auth/local" method="post">
+            <input id="username-input" type="text" name="username" placeholder="Username" />
+            <input type="password" name="password" placeholder="Password" /> <submit class="button blue" id="login-btn">Login</submit>
+            <div id="remember-input-div"><label><input type="checkbox" name="remember"/> Remember</label> <a id="login-forgot" href="user/forgot">Forgotten?</a></div>
+            <a id="login-btn-facebook" href="/auth/facebook"><img src="res/img/system/login-with-facebook.png" alt="facebook login" /></a> 
+        </form>
+    </div>
+</div><!-- "header-div -->
+<div id="center-div">
+    <div id="content-div">
+        <h1>Game of the internets</h1>
+        <p>Be part of the jaming community and earn your title as top player.</p>
+    </div>
+    <div id="signup-div">
+        <form name="signup" action="user/signup" method="post">
+            Sign Up
+            <div id="signup-inputs">
+                <input id="username-input" type="text" name="username" placeholder="Username" />
+                <input type="password" name="password" placeholder="Password" />
+                <input type="email" name="email" placeholder="Email" />
             </div>
             <div id="login-btns">
-                <a id="login-btn-facebook" href="/auth/facebook"><img src="res/img/system/login-with-facebook.png" alt="facebook login" /></a> <span id="login-btn-span"><a class="button blue" id="login-btn">Login</a> or </span><a class="button" id="signup-btn">Sign Up</a>
+                <submit class="button" id="signup-btn">Sign Up</submit>
             </div>
         </form>
     </div>
