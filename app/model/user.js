@@ -34,7 +34,7 @@ module.exports = function(app){
   };
   UserSchema.methods.notifyUser = function(user, message, callback){
     //Notifies uers
-    var Notification = require(__dirname + '/../app/model/notification')(app);
+    var Notification = require(__dirname + '/notification')(app);
     var notification = new Notification();
     notification.message = message;
     notification.owner = user._id;
@@ -44,10 +44,9 @@ module.exports = function(app){
       }
     });
   };
-  
-  var userModel = app.mg.model('user', UserSchema);
+  app.mg.model('user', UserSchema);
   var crpyto = require('crypto');
-  return userModel;
+  return app.mg;
 
   var test = {
     create: function(data, callback){

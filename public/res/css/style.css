@@ -221,3 +221,7 @@ header a:hover{
     margin: -6px 0px 0px 6px;
     text-shadow:0 1px 1px rgba(255, 255, 255, 0.5);
 }
+
+.ui-error-span{
+    color: #ff0000;
+}

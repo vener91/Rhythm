@@ -21,6 +21,22 @@ app.set('views', __dirname + '/app/view');
 app.set('view engine', 'html');
 app.set("view options", { layout: "layout" });
 
+//Set up fatalError
+app.error(function(err, req, res){
+    app.fatalError(res, err);
+});
+app.fatalError = function(res, err){
+    console.log(err);
+    if(typeof(err) == undefined || err == null){
+        err = {};
+    }
+    res.render('site/500', {
+        title: ' - Server Fatal Error',
+        scripts: [],
+        styles: [],
+        err: JSON.stringify(err)
+    });
+}
 //Set up ExpressJS
 app.configure(function(){
     app.title = 'Rhythm Project';
@@ -58,25 +74,33 @@ app.helpers({
     renderScripts: function(scripts){ 
         var scriptsStr = '';
         for(var i = 0; i < scripts.length; i++){
-            scriptsStr += '<script src="res/js/' + scripts[i] + '.js" type="text/javascript"></script>';
+            scriptsStr += '<script src="/res/js/' + scripts[i] + '.js" type="text/javascript"></script>';
         }
         return scriptsStr;
     },
     renderStyles: function(styles){
         var stylesStr = '';
         for(var i = 0; i < styles.length; i++){
-            stylesStr += '<link rel="stylesheet" href="res/css/' + styles[i] + '.css" type="text/css">';
+            stylesStr += '<link rel="stylesheet" href="/res/css/' + styles[i] + '.css" type="text/css">';
         }
         return stylesStr;
     }
 });
 
+//Include models
+fs.readdir(__dirname + '/app/model', function(err, files){
+  if (err) throw err;
+  files.forEach(function(file){
+    require(__dirname + '/app/model/' + file)(app);
+  });
+});
+
 //Include Controllers here
-require('./app/controller/site')(app);
-require('./app/controller/player')(app);
-require('./app/controller/dash')(app);
-require('./app/controller/auth')(app);
-require('./app/controller/user')(app);
+require(__dirname + '/app/controller/site')(app);
+require(__dirname + '/app/controller/player')(app);
+require(__dirname + '/app/controller/dash')(app);
+require(__dirname + '/app/controller/auth')(app);
+require(__dirname + '/app/controller/user')(app);
 
 if (!module.parent) {
     app.listen(80);

@@ -9,15 +9,25 @@ module.exports = function(app){
             title: 'Rhythm Project',
             scripts: [],
             styles: ['site'],
-            username: 'BeatsTap',
+            err: {
+                login: '',
+                signup: ''
+            },
         });
     });
-    app.get('/err', function(req, res){
+    app.get('/err/*', function(req, res){
+        var errorMsg = req.params[0].split(/\//);
         res.render('site', {
             title: 'Rhythm Project',
             scripts: [],
             styles: ['site'],
-            err: '',
+            err: {
+                login: (errorMsg[0] == 'login') ? errorMsg[1] : '',
+                signup: (errorMsg[0] == 'signup') ? errorMsg[1] : ''
+            },
         });
+    });
+    app.get('/fatalerror', function(req, res){
+       app.fatalError(res); 
     });
 };

@@ -86,6 +86,14 @@
     text-decoration: underline;
 }
 
+#login-error{
+    font-size: 15px;
+    position: absolute;
+    text-align: left;
+    width: 300px;
+    margin-top: 26px;
+}
+
 #remember-input-div{
     font-size: 13px;
     width: 203px;
@@ -124,4 +132,3 @@
     margin-left: auto;
     border-radius: 5px;
 }
-

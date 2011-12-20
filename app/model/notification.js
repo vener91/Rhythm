@@ -6,7 +6,7 @@ module.exports = function(app){
   var Schema = app.mg.Schema
   , ObjectId = Schema.ObjectId;
 
-  var Notification = new Schema({
+  var NotificationSchema = new Schema({
     message: { type: String },
     date: { type: Date, default: Date.now },
     viewed: { type: Boolean, default: false },

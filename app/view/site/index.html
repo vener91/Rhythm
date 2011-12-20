@@ -3,13 +3,13 @@
     });
 </script>
 <div id="header-div">
-    <img id="logo-img" src="res/img/system/logo.png" alt="logo"/>
+    <img id="logo-img" src="/res/img/system/logo.png" alt="logo"/>
     <div id="login-div">
-        <form name="login" action="auth/local" method="post">
+        <form name="login" action="/auth/local" method="post">
             <input id="username-input" type="text" name="username" placeholder="Username" />
             <input type="password" name="password" placeholder="Password" /> <input id="login-btn" class="button blue" type="submit" value="Login" />
-            <div id="remember-input-div"><label><input type="checkbox" name="remember"/> Remember</label> <a id="login-forgot" href="user/forgot">Forgotten?</a></div>
-            <a id="login-btn-facebook" href="/auth/facebook"><img src="res/img/system/login-with-facebook.png" alt="facebook login" /></a> 
+            <div id="remember-input-div"><span id="login-error" class="ui-error-span"><%= err.login %></span> <label><input type="checkbox" name="remember"/> Remember</label> <a id="login-forgot" href="user/forgot">Forgotten?</a></div>
+            <a id="login-btn-facebook" href="/auth/facebook"><img src="/res/img/system/login-with-facebook.png" alt="facebook login" /></a>
         </form>
     </div>
 </div><!-- "header-div -->
@@ -21,7 +21,7 @@
 
     </div>
     <div id="signup-div">
-        <form name="signup" action="user/signup" method="post">
+        <form name="signup" action="/user/signup" method="post">
             Sign Up
             <div id="signup-inputs">
                 <input id="username-input" type="text" name="username" placeholder="Username" />
@@ -29,7 +29,7 @@
                 <input type="email" name="email" placeholder="Email" />
             </div>
             <div id="login-btns">
-                <input type="submit" class="button" id="signup-btn" value="Sign Up" />
+                <span id="signup-error" class="ui-error-span"><%= err.signup %></span> <input type="submit" class="button" id="signup-btn" value="Sign Up" />
             </div>
         </form>
     </div>
