@@ -33,17 +33,3 @@
     }
 
 })(jQuery);
-
-$(document).ready(function(){
-   if($("#user-link").length){
-    $("#user-link").on("click" ,function(){
-        if($("#user-panel").is(":visible")){
-            $("#user-panel").fadeOut(200);
-            $("#user-link").removeClass('user-panel-link-select'); 
-        }else{
-            $("#user-panel").fadeIn(200);
-            $("#user-link").addClass('user-panel-link-select'); 
-        }
-    });
-   }
-});
