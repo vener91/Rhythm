@@ -1,6 +1,6 @@
 module.exports = function(app){
     //Import required models
-    var User = require('../model/user')(app);
+    User = app.mg.model('user');
 
     app.post('/user/signup', function(req, res){
         User.findOne({email: req.body.email}, function(err, user) {
@@ -13,10 +13,10 @@ module.exports = function(app){
                 user.save(function (err) {
                     if(err == null){
                         //Auto auth this user
-                        app.passport.authenticate('local', { failureRedirect: '/' })(req, res, function(){
-                            res.redirect('/dash');
+                        app.passport.authenticate('local', { failureRedirect: '/' })(req, res, function(req, res){
                             //Add notification to thank user for signing up
-                            //app.user(req.body.username).notify("Thanks for signing up")    
+                            User.notifyUser(user, "Thanks for signing up");
+                            res.redirect('/dash');
                         });
                     }else{
                         res.redirect('/err/');

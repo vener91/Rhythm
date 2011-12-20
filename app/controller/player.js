@@ -4,7 +4,10 @@ module.exports = function(app){
 	        layout: 'page-layout',
             scripts: ['player', 'webgl-2d'],
             styles: ['player'],
-            title: app.title + ' - Player'
+            title: app.title + ' - Player',
+            user: {
+            	username: 'Rhythmuser'
+            }
         });
     });
 };

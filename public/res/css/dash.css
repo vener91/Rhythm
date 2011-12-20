@@ -1,0 +1,58 @@
+/* Dashboard */
+
+#songs-list{
+    color: #fff;
+    list-style: none;
+}
+
+#songs-list > li{
+    padding: 5px;
+    height: 20px;
+}
+
+#songs-list > li.lvl-1{
+    background-color: rgba(223, 128, 255, 0.4);
+}
+
+#songs-list > li div.song-name{
+    float: left;
+}
+
+#songs-list > li div.artist{
+    float: right;
+    color: #999;
+}
+
+#dash-div{
+    float: left;
+    width: 100%;
+    margin-right: -340px;
+}
+
+#dash-div > div{
+    margin-right: 340px;
+    color:#EFEFEF;
+    border-radius:5px;
+}
+
+#dash-div > div{
+    overflow:auto;
+    padding:20px 0px 5px 15px;
+}
+
+#sidebar-div{
+    float: right;
+    width: 300px;
+    padding: 20px 15px 20px 20px;
+}
+
+#recently-played{
+    margin: 5px;
+    height: 115px;
+}
+
+#recently-played img{
+    width: 100px;
+    border: 1px solid #EFEFEF;
+    margin: 5px;
+}

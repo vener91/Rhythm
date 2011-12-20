@@ -35,51 +35,99 @@ input[type='checkbox']{
     display:none;
 }
 
-/* Dashboard */
-#song-div{
-    float: left;
-    width:300px;
-    padding:20px 0px 20px 20px;
+/* page-layout */
+header {
+    padding: 10px 0px 0px 10px;
+    height: 30px;
+    line-height: 30px;
 }
 
-#songs-list{
+header img{
+    float: left;
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+header img:hover{
+    opacity: 1;
+}
+
+header > div.left-links{
+    float: left;
+}
+
+header > div.right-links{
+    display: block;
+    float: right;
+}
+
+header > div.left-links a, header > div.right-links > a{
+    color: #888;
+    text-decoration: none;
+    font-size: 18px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+header a:hover{
     color: #fff;
+}
+
+#user-link{
+    padding: 4px;
+}
+
+.user-panel-link-select{
+    background-color: white;
+    padding: 4px;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.user-panel-link-select:hover{
+    color: #888;
+}
+
+#user-panel{
+    position: absolute;
+    width: 300px;
+    background-color: #FEFEFE;
+    margin-top: 30px;
+    right: 15px;
+    border-radius: 10px 0px 10px 10px;
+    box-shadow: 4px 4px 10px #000;
+}
+
+#nofication-panel{
     list-style: none;
+    max-height: 700px;
+    color: #333;        
 }
 
-#songs-list > li{
-    padding: 5px;
-    height: 20px;
+#nofication-panel-empty{
+    text-align: center;
+    color: #666;
 }
 
-#songs-list > li.lvl-1{
-    background-color: rgba(223, 128, 255, 0.4);
-}
-
-#songs-list > li div.song-name{
+#user-panel-action-bar a{
+    color: #333;
+    width: 50%;
+    height: 30px;
+    display: block;
     float: left;
+    text-align: center;
+    text-decoration: none;
 }
 
-#songs-list > li div.artist{
-    float: right;
-    color: #999;
+#user-panel-action-bar a:first-child{
+    border-radius: 0px 0px 0px 10px;
 }
 
-#song-dash-div{
-    float: right;
-    width: 100%;
-    margin-left: -320px;
+#user-panel-action-bar a:last-child{
+    border-radius: 0px 0px 10px 0px;
 }
 
-#song-dash-div > div{
-    margin-left: 320px;
-    color:#EFEFEF;
-    border-radius:5px;
-}
-
-#song-dash-div > div{
-    overflow:auto;
-    padding:20px 10px 5px 10px;
+#user-panel-action-bar a:hover{
+    background-color: #ddd;
 }
 /* Page Elements */
 
@@ -114,23 +162,30 @@ input[type='checkbox']{
 .blue.button, .blue.button:visited { background-color: #2981e4; }
 .blue.button:hover { background-color: #2575cf; }
 
-.mushroom-title{
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    background-color: rgba(99,99,99,0.6);
-    color: #efefef;
-    text-align: center;
-    padding-top 5px;
-    padding-bottom: 5px;
+/* Little window*/
+.ui-mushroom-title{
+    color: #EFEFEF;
+    text-shadow: 0px 0px 15px white;
+    text-align: left;
+    padding-left: 15px;
+    margin-bottom: -8px;
 }
 
-.mushroom-sandwich{
+.ui-mushroom-content{
+    padding: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    min-height: 30px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.ui-mushroom-sandwich{
     padding: 5px;
     background: #333 -webkit-linear-gradient(top, rgba(33, 33, 33, .6), rgba(200, 200, 200, .2), rgba(33, 33, 33, .6));
     background: #333 -moz-linear-gradient(bottom, rgba(0, 0, 0, .2), rgba(255, 255, 255, .3), rgba(0, 0, 0, .2));
 }
 
-.mushroom-sandwich > input[type='search']{
+.ui-mushroom-sandwich > input[type='search']{
     width: 290px; /* 300 - 5 - 5*/
     border-radius: 30px;
     font-size: 18px;
@@ -139,6 +194,30 @@ input[type='checkbox']{
     padding-left: 5px;
 }
 
-.mushroom-sandwich > input[type='search']:focus{
+.ui-mushroom-sandwich > input[type='search']:focus{
     outline: none;
+}
+
+.ui-horizontal-slider{
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.ui-red-badge{
+    font-size: 15px;
+    position: absolute;
+    background: -webkit-linear-gradient(#F46962, #F13C31);
+    background: -moz-linear-gradient(100% 100% 90deg, #F13C31, #F46962);
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    border: 1px solid white;
+    top: 3px;
+    padding: 1px 1px 0px 0px;
+    margin-left: 2px;
+}
+
+.ui-red-badge > div{
+    margin: -6px 0px 0px 6px;
+    text-shadow:0 1px 1px rgba(255, 255, 255, 0.5);
 }

@@ -25,13 +25,28 @@ module.exports = function(app){
       return true;
       }, 'Invalid Email']},
     facebook_id: { type: String },
-    join_date: { type: Date, default: Date.now }
+    join_date: { type: Date, default: Date.now },
+    verified: { type: Boolean, default: false }
+    
   });
-  var userModel = app.mg.model('user', UserSchema);
-  var crpyto = require('crypto');
-  userModel.hashPassword = function(text){
+  UserSchema.statics.hashPassword = function(text){
       return crpyto.createHash('sha1').update(text).digest('hex');
   };
+  UserSchema.methods.notifyUser = function(user, message, callback){
+    //Notifies uers
+    var Notification = require(__dirname + '/../app/model/notification')(app);
+    var notification = new Notification();
+    notification.message = message;
+    notification.owner = user._id;
+    notification.save(function(err){
+      if(typeof(callback) === 'function'){
+        callback(err);
+      }
+    });
+  };
+  
+  var userModel = app.mg.model('user', UserSchema);
+  var crpyto = require('crypto');
   return userModel;
 
   var test = {

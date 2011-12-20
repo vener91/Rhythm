@@ -11,9 +11,26 @@
         <title><%= title %></title>
     </head>
     <body>
-        <header class="hidden">
-            <a>Songs</a>
-            <a>Rooms</a>
+        <header>
+            <a href="dash"><img src="res/img/system/logo-small.png" /></a>
+            <div class="left-links">
+                <a href="songs">Songs</a>
+                <a href="rooms">Rooms</a>
+                <a href="shop">Shop</a>
+            </div>
+            <div class="right-links">
+                <div id="nofication-badge" class="ui-red-badge"><div>1</div></div>
+                <div id="user-panel" class="hidden">
+                    <ul id="nofication-panel">
+                        <li id="nofication-panel-empty">No notifications</li>
+                    </ul>
+                    <div id="user-panel-action-bar">
+                        <a href="user/settings" >Settings</a>
+                        <a href="auth/logout" >Logout</a>
+                    </div>
+                </div>
+                <a id="user-link" href="#"><%=user.username %> &#9660;</a>
+            </div>
         </header>
         <div id="warp">
             <%- body %>

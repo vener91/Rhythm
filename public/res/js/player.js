@@ -379,8 +379,8 @@ function animateLoader(){
 }
 $(document).ready(function(){
     animateLoader();
-    $('.player-bg').setFluid(72, 1);
-    $('.player-canvas').setFluid(75, 1, function(height){
+    $('.player-bg').setFluid(112, 1);
+    $('.player-canvas').setFluid(115, 1, function(height){
         $('.player-canvas').get(0).height = height;
     }).get(0).width = 350;
     

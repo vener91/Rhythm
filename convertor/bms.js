@@ -98,7 +98,7 @@ fs.readdir('./convertor/BMS', function(err, songDirs){
 					//Parse clipchart
 					if(lineChunk[0].match(/#WAV../) != null){
 						var oldName = lineChunk[1].trim();
-						var newName = lineChunk[1].trim().replace(/\+/, "plus").replace(/#/, "hash");
+						var newName = lineChunk[1].trim().replace(/\+/g, "plus").replace(/#/g, "hash");
 						song.clipchart[lineChunk[0].substring(4)] = newName;
 						//Copy notes
 						copyFileSync('./convertor/BMS/' + songDir + '/' + oldName, './convertor/BMSconverted/' + newName)
