@@ -26,14 +26,15 @@ app.error(function(err, req, res){
     app.fatalError(res, err);
 });
 app.fatalError = function(res, err){
-    console.log(err);
     if(typeof(err) == undefined || err == null){
         err = {};
+    }else{
+        console.log(err);
     }
     res.render('site/500', {
-        title: ' - Server Fatal Error',
+        title: app.title + ' - Server Fatal Error',
         scripts: [],
-        styles: [],
+        styles: ['error'],
         err: JSON.stringify(err)
     });
 }
