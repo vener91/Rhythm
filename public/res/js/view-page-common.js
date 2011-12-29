@@ -13,5 +13,11 @@ $(document).ready(function(){
         });
     }
     //Socket.io connection
+    //Notifications
+    notifications = io.connect('/notifications');
+
+    notifications.on('connect', function (test) {
+        notifications.emit('hi!');
+    });
 
 });

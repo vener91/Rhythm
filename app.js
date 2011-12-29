@@ -1,6 +1,7 @@
 //Main start point
 var express = require('express')
 , app = module.exports = express.createServer()
+, MongoStore = require('connect-mongo')
 , io = require('socket.io').listen(app)
 , fs = require('fs')
 
@@ -45,14 +46,21 @@ app.configure(function(){
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.cookieParser());
+    app.mongoStore = new MongoStore({
+      db: config.db
+    })
     app.use(express.session({
-        secret: 'rhythm'
+        secret: config.cookieSecret,
+        store: app.mongoStore
     }));
+
+    //Socket.io
+    app.io = io;
 
     //Database MongoDB
     app.mg = mongoose;
-    app.mg.connect('mongodb://localhost/rhythm');
-
+    app.mg.connect(config.url);
+    
     //Validator
     app.check = validator.check;
     app.sanitize = validator.sanitize;
@@ -102,6 +110,7 @@ require(__dirname + '/app/controller/player')(app);
 require(__dirname + '/app/controller/dash')(app);
 require(__dirname + '/app/controller/auth')(app);
 require(__dirname + '/app/controller/user')(app);
+require(__dirname + '/app/controller/notification')(app);
 
 if (!module.parent) {
     app.listen(80);
