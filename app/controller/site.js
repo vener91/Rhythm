@@ -1,8 +1,3 @@
-
-/**
- * Module dependencies.
- */
-
 module.exports = function(app){
     app.get('/', function(req, res, next) { if (req.isAuthenticated()) { res.redirect('/dash'); } else { next(); } }, function(req, res){
         res.render('site', {
