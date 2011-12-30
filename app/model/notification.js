@@ -8,6 +8,7 @@ module.exports = function(app){
 
   var NotificationSchema = new Schema({
     message: { type: String },
+    type: { type: String, enum: ['invite', 'followed', 'msg'] },
     date: { type: Date, default: Date.now },
     viewed: { type: Boolean, default: false },
     owner: { type: Schema.ObjectId }

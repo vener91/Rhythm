@@ -61,9 +61,7 @@ function preloadTrack(trackName, canvasObj, msgCanvasObj, callback){
         gameCanvasCtx = gameCanvas.getContext("2d")
         //WebGL2D.enable(gameCanvas); // adds "webgl-2d" context to cvs
         //gameCanvasCtx = gameCanvas.getContext("webgl-2d")
-        blueNoteImg = loadImage('res/skin/rhythm/note-blue.png');
-        goldNoteImg = loadImage('res/skin/rhythm/note-gold.png');
-        whiteNoteImg = loadImage('res/skin/rhythm/note-white.png');
+        skinImg = loadImage('res/skin/rhythm/rhythm-skin.png');
         coolNoteImg = loadImage('res/skin/rhythm/cool.png');
         goodNoteImg = loadImage('res/skin/rhythm/good.png');
         badNoteImg = loadImage('res/skin/rhythm/bad.png');
@@ -107,25 +105,25 @@ function preloadTrack(trackName, canvasObj, msgCanvasObj, callback){
                 var currRow = currBar[j];
                 if(currRow != null){
                     if(typeof(currRow.w1) != 'undefined'){
-                        keyStack.push({type: whiteNoteImg, x:0, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.w1 });
+                        keyStack.push({spriteXPos: 0, spriteWidth: 54, x:0, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.w1 });
                     }
                     if(typeof(currRow.b1) != 'undefined'){
-                        keyStack.push({type: blueNoteImg, x:51, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.b1 });
+                        keyStack.push({spriteXPos: 54, spriteWidth: 37, x:51, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.b1 });
                     }
                     if(typeof(currRow.w2) != 'undefined'){
-                        keyStack.push({type: whiteNoteImg, x:92, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.w2 });
+                        keyStack.push({spriteXPos: 0, spriteWidth: 54, x:92, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.w2 });
                     }
                     if(typeof(currRow.g) != 'undefined'){
-                        keyStack.push({type: goldNoteImg, x:143, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.g }); 
+                        keyStack.push({spriteXPos: 91, spriteWidth: 64, x:143, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.g }); 
                     }
                     if(typeof(currRow.w3) != 'undefined'){
-                        keyStack.push({type: whiteNoteImg, x:208, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.w3 }); 
+                        keyStack.push({spriteXPos: 0, spriteWidth: 54, x:208, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.w3 }); 
                     }
                     if(typeof(currRow.b2) != 'undefined'){
-                        keyStack.push({type: blueNoteImg, x:259, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.b2 }); 
+                        keyStack.push({spriteXPos: 54, spriteWidth: 37, x:259, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.b2 }); 
                     }
                     if(typeof(currRow.w4) != 'undefined'){
-                        keyStack.push({type: whiteNoteImg, x:300, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.w4 }); 
+                        keyStack.push({spriteXPos: 0, spriteWidth: 54, x:300, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.w4 }); 
                     }
                 }
             }
@@ -311,7 +309,7 @@ function rhythmGameLoop(newTime){
         var yPos = ((newTime - startGameTime) * heightPerMilisec) + key.y;
         if(yPos < gameCanvas.height){
             if(yPos > 0){
-                gameCanvasCtx.drawImage(key.type, key.x, yPos);
+                gameCanvasCtx.drawImage(skinImg, key.spriteXPos, 90, key.x, yPos, key.spriteWidth, 10);
                 //Dynamically load Audio objects
                 if(typeof(key.clip) == 'string'){
                     keyStack[keyIndex].clip = getAudio(track.clipchart, trackName, key.clip);

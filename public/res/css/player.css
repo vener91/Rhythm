@@ -20,7 +20,7 @@
     height:100%;
     width:100%;
     position:fixed;
-    z-index:99;
+    z-index:1;
 }
 
 #player-load-info{
@@ -131,25 +131,25 @@
 }
 
 .player-keys > .key-white-left{
-    background-image: url("../skin/rhythm/key-white-left.png");
-    width: 71px
+    background: url("../skin/rhythm/rhythm-skin.png") no-repeat 0px -220px;
+    width: 71px;
 }
 
 .player-keys > .key-white-left.pressed{
-    background-image: url("../skin/rhythm/key-white-left-p.png");
+    background-position: -72px -220px;
 }
 
 .player-keys > .key-white-right{
-    background-image: url("../skin/rhythm/key-white-right.png");
+    background: url("../skin/rhythm/rhythm-skin.png") no-repeat -225px -220px;
     width: 71px;
 }
 
 .player-keys > .key-white-right.pressed{
-    background-image: url("../skin/rhythm/key-white-right-p.png");
+    background-position: -296px -220px;
 }
 
 .player-keys > .key-blue{
-    background-image: url("../skin/rhythm/key-blue.png");
+    background: url("../skin/rhythm/rhythm-skin.png") no-repeat -144px -220px;
     width: 40px;
     margin-left: -20px;
     margin-right: -20px;
@@ -159,14 +159,14 @@
 }
 
 .player-keys > .key-blue.pressed{
-    background-image: url("../skin/rhythm/key-blue-p.png");
+    background-position: -185px -220px;
 }
 
 .player-keys > .key-gold{
-    background-image: url("../skin/rhythm/key-gold.png");
+    background: url("../skin/rhythm/rhythm-skin.png") no-repeat -368px -220px;
     width: 66px;
 }
 
 .player-keys > .key-gold.pressed{
-    background-image: url("../skin/rhythm/key-gold-p.png");
+    background-position: -435px -220px;
 }

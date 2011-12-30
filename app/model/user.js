@@ -26,20 +26,24 @@ module.exports = function(app){
       }, 'Invalid Email']},
     facebook_id: { type: String },
     join_date: { type: Date, default: Date.now },
-    verified: { type: Boolean, default: false }
+    verified: { type: Boolean, default: false },
+    sockets: [String],
     
   });
   UserSchema.statics.hashPassword = function(text){
       return crpyto.createHash('sha1').update(text).digest('hex');
   };
-  UserSchema.methods.notifyUser = function(user, message, callback){
+  UserSchema.methods.notifyUser = function(user, type, message, callback){
     //Notifies uers
     var Notification = require(__dirname + '/notification')(app);
     var notification = new Notification();
     notification.message = message;
     notification.owner = user._id;
+    notification.type = type;
     notification.save(function(err){
       if(typeof(callback) === 'function'){
+        //Sent notification via sockets
+        //Get responsible sockets
         callback(err);
       }
     });
@@ -47,23 +51,4 @@ module.exports = function(app){
   app.mg.model('user', UserSchema);
   var crpyto = require('crypto');
   return app.mg;
-
-  var test = {
-    create: function(data, callback){
-      var UserInstance = new UserModel();
-      UserInstance.name     = data.name;
-      UserInstance.password = data.password;
-      UserInstance.email    = data.email;
-      UserInstance.save(function (err) {
-        if(typeof(callback) == 'function'){
-          callback(err, UserInstance);
-        }
-      });
-    },
-    findOne: UserSchema.findOne,
-    find: UserSchema.find,
-    getById: function(id, callback){
-      callback(this);
-    }
-  }
 }

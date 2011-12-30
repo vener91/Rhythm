@@ -1,7 +1,7 @@
 module.exports = function(app){
     //Import required models
     app.post('/user/signup', function(req, res){
-        User = app.mg.model('user');
+        var User = app.mg.model('user');
         var resCarry = res;
         var reqCarry = req;
         User.find({ $or: [ { username: req.body.username } , { email: req.body.email } ] } , function(err, users) {
@@ -22,7 +22,7 @@ module.exports = function(app){
                             app.passport.authenticate('local', { failureRedirect: '/err/login/Invalid Password or Username' })(req, res, function(req, res){
                                 //Add notification to thank user for signing up
                                 resCarry.redirect('/dash');
-                                user.notifyUser(user, "Thanks for signing up");
+                                user.notifyUser(user, "msg", "Thanks for signing up");
                             });
                         }
                     });

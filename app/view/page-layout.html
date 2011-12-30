@@ -32,10 +32,13 @@
                 <a href="shop">Shop</a>
             </div>
             <div class="right-links">
-                <div id="nofication-badge" class="ui-red-badge"><div>1</div></div>
+                <div id="notification-badge" class="ui-red-badge hidden"><div>1</div></div>
                 <div id="user-panel" class="hidden">
-                    <ul id="nofication-panel">
-                        <li id="nofication-panel-empty">No notifications</li>
+                    <ul id="notification-panel">
+                        <li>Someone invited you to a game<div class="delete_btn"></div></li>
+                        <li>Someone just followed you<div class="delete_btn"></div></li>
+                        <li>Someone just beat you in Song<div class="delete_btn"></div></li>
+                        <li class="hidden" id="notification-panel-empty">No notifications</li>
                     </ul>
                     <div id="user-panel-action-bar">
                         <a href="user/settings" >Settings</a>

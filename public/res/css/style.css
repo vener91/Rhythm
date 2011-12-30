@@ -52,6 +52,7 @@ header img:hover{
     opacity: 1;
 }
 
+
 header > div.left-links{
     float: left;
 }
@@ -69,7 +70,7 @@ header > div.left-links a, header > div.right-links > a{
     margin-right: 15px;
 }
 
-header a:hover{
+header > div.left-links > a:hover, header > div.right-links > a:hover{
     color: #fff;
 }
 
@@ -77,13 +78,13 @@ header a:hover{
     padding: 4px;
 }
 
-.user-panel-link-select{
+header > div.right-links > .user-panel-link-select{
     background-color: white;
     padding: 4px;
     border-radius: 5px 5px 0px 0px;
 }
 
-.user-panel-link-select:hover{
+header > div.right-links > .user-panel-link-select:hover{
     color: #888;
 }
 
@@ -95,17 +96,51 @@ header a:hover{
     right: 15px;
     border-radius: 10px 0px 10px 10px;
     box-shadow: 4px 4px 10px #000;
+    z-index: 2;
 }
 
-#nofication-panel{
+#notification-panel{
     list-style: none;
     max-height: 700px;
     color: #333;        
 }
 
-#nofication-panel-empty{
+#notification-panel > li{
+    padding: 8px;
+    font-size: 13px;
+    line-height: 13px;
+    cursor: pointer;
+}
+
+#notification-panel > li > .delete_btn{
+    float: right;
+    margin-top: -2px;
+    width: 16px;
+    height: 16px;
+    background: url('/res/img/system/delete.png') 0px 0px no-repeat;
+}
+
+#notification-panel > li > .delete_btn:hover{
+    background: url('/res/img/system/delete.png') -16px 0px no-repeat;
+}
+
+#notification-panel > li:first-child{
+    border-radius: 10px 0px 0px 0px;
+}
+
+#notification-panel > li:nth-child(even){
+    background-color: #EEE;
+}
+
+#notification-panel > li:hover{
+    background-color: #BDCDFF;
+}
+
+#notification-panel > #notification-panel-empty{
     text-align: center;
+    background-color: #FEFEFE;
     color: #666;
+    cursor: default;
 }
 
 #user-panel-action-bar a{
@@ -210,7 +245,7 @@ header a:hover{
     background: -moz-linear-gradient(100% 100% 90deg, #F13C31, #F46962);
     width: 20px;
     height: 20px;
-    border-radius: 20px;
+    border-radius: 50%;
     border: 1px solid white;
     top: 3px;
     padding: 1px 1px 0px 0px;
