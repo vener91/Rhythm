@@ -18,7 +18,7 @@ module.exports = function(app){
             request({uri: url, encoding: 'binary'}, function(err, response, body){
                 if(!err && response.statusCode == 200){
                   //data_uri_prefix = "data:" + response.headers["content-type"] + ";base64,";
-                  data = new Buffer(body.toString(), "binary").toString("base64");
+                  data = "data:audio/ogg;base64," + new Buffer(body.toString(), "binary").toString("base64");
                   //data = data_uri_prefix + data;
                   res.send(data);
               }  

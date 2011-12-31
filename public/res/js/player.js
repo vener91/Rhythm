@@ -23,16 +23,17 @@ var trackName;
 var speed = 2;
 var gameCanvas = null;
 var gameCanvasCtx = null;
+var gameHeight = null;
+var gameWidth = null;
 var keyboardState = null;
 
 function preloadTrack(trackName, canvasObj, msgCanvasObj, callback){
-    filesToLoad = 17;
+    filesToLoad = 15;
     filesLoaded = 0;
 
     var isAppLoaded = function(callback){
         filesLoaded++;
         if (filesLoaded >= filesToLoad) {
-          delete window.clipLibrary;
           callback();  
         } 
     }
@@ -44,11 +45,10 @@ function preloadTrack(trackName, canvasObj, msgCanvasObj, callback){
         return img;
     }
 
-    var loadAudio = function(uri){
-        var audio = new Audio();
-        audio.addEventListener('canplaythrough', isAppLoaded(callback), false); // It works!!
-        audio.src = uri;
-        return audio;
+    var loadAudio = function(trackName, clipName, fileName, callback){
+        $.get("/player/getURI", {track: trackName, file: fileName}, function(data){
+            callback(clipName, data);
+        },"text");
     }
     $("#player-load img").attr('src', './res/track/' + trackName + '/album.jpg' );
     //Load Song
@@ -57,6 +57,8 @@ function preloadTrack(trackName, canvasObj, msgCanvasObj, callback){
         var framerateObj = $(".stats-framerate");
 
         gameCanvas = canvasObj;
+        gameHeight = gameCanvas.height;
+        gameWidth = gameCanvas.width;
         msgCanvas = msgCanvasObj;
         gameCanvasCtx = gameCanvas.getContext("2d")
         //WebGL2D.enable(gameCanvas); // adds "webgl-2d" context to cvs
@@ -93,7 +95,9 @@ function preloadTrack(trackName, canvasObj, msgCanvasObj, callback){
         //Load keys
         clipLibrary = {}; //Clear library
         for(clipName in track.clipchart){
-            clipLibrary = loadAudio('/res/track/' + trackName + '/' + track.clipchart[clipName]);
+            loadAudio(trackName, clipName, track.clipchart[clipName], function(clipName, data){
+               clipLibrary[clipName] = data; 
+            });
         }
         //Load keys
         keyStack = [] //Clear stack
@@ -256,9 +260,9 @@ function preloadTrack(trackName, canvasObj, msgCanvasObj, callback){
     });    
 }
 
-function getAudio(clipchart, trackName, clipName){
+function getAudio(clipName){
     var clip = new Audio();
-    clip.src = './res/track/' + trackName + '/' + clipchart[clipName];
+    clip.src = clipLibrary[clipName];
     clip.preload = 'auto';
     return clip;
 }
@@ -273,9 +277,8 @@ function changeSpeed(speed){
 
 //Setup game loop
 function rhythmGameLoop(newTime){
-    gameCanvasCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-    //Make notes rain
-    //Calcuate new Y
+    gameCanvasCtx.clearRect(0, 0, gameCanvas.width, gameHeight);
+    //Make notes readline.Interface(input, output, completer);
     //var newTime = new Date().getTime();
     if(lastUpdateTime == null){
         lastUpdateTime = newTime;
@@ -288,7 +291,7 @@ function rhythmGameLoop(newTime){
     var i = 0;
     gameCanvasCtx.strokeStyle = '#FFFFFF'
     gameCanvasCtx.beginPath();
-    while(firstBarY + (i * barHeight ) < gameCanvas.height){
+    while(firstBarY + (i * barHeight ) < gameHeight){
         gameCanvasCtx.moveTo(0,firstBarY + (i * barHeight ));  
         gameCanvasCtx.lineTo(350,firstBarY + (i * barHeight ));  
         i++;       
@@ -303,24 +306,24 @@ function rhythmGameLoop(newTime){
     gameCanvasCtx.stroke();
     */
     //Render Notes
-    for(keyIndex in keyStack){
-        key = keyStack[keyIndex];
+    var stackLength = keyStack.length;
+    for(i = 0; i < stackLength; i++ ){
+        key = keyStack[i];
         //Paint
         var yPos = ((newTime - startGameTime) * heightPerMilisec) + key.y;
-        if(yPos < gameCanvas.height){
+        if(yPos < gameHeight){
             if(yPos > 0){
-                gameCanvasCtx.drawImage(skinImg, key.spriteXPos, 90, key.spriteWidth, 10, key.x, yPos, key.spriteWidth, 10);
+                gameCanvasCtx.drawImage(skinImg, key.spriteXPos, 90, key.spriteWidth, 10, key.x, Math.round(yPos), key.spriteWidth, 10);
                 //Dynamically load Audio objects
-                if(typeof(key.clip) == 'string'){
-                    keyStack[keyIndex].clip = getAudio(track.clipchart, trackName, key.clip);
+                if(typeof(key.clip) === 'string'){
+                    keyStack[i].clip = getAudio(key.clip);
                 }
-            }else{
+            } else {
                 break;
             }
-        }else{
+        } else {
             //Remove key
-            keyStack[keyIndex].clip.play();
-            keyStack.splice(keyIndex,1);
+            keyStack.shift();
         }
     }
 
@@ -353,7 +356,6 @@ function rhythmGameLoop(newTime){
                 msgCanvas.getContext("2d").drawImage(comboImg[comboString[i]], x, comboY);
                 x += 50;    
             }
-
             comboY = Math.floor((newTime - lastUpdateTime) * 0.5) + comboY; 
         }
     }
@@ -364,6 +366,7 @@ function rhythmGameLoop(newTime){
         window.requestAnimationFrame(rhythmGameLoop); //Start Game    
     }
 }
+
 function animateLoader(){
     if($("#player-play-loading").is(":visible")){
         if($("#player-play-loading").css('left') == "100px"){
@@ -375,7 +378,9 @@ function animateLoader(){
         $("#player-play-loading").remove();
     }
 }
+
 $(document).ready(function(){
+
     animateLoader();
     $('.player-bg').setFluid(112, 1);
     $('.player-canvas').setFluid(115, 1, function(height){

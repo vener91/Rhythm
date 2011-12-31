@@ -27,11 +27,11 @@ module.exports = function(app){
             socket.emit('init', {
                 test: 'test'    
             });
-            console.info(app.io.sockets);
+            //console.info(app.io.sockets);
         });
     })
     .on('disconnect', function(socket){
-        console.info(socket)
+        //console.info(socket)
     });
 };
 
