@@ -113,6 +113,6 @@ require(__dirname + '/app/controller/user')(app);
 require(__dirname + '/app/controller/notification')(app);
 
 if (!module.parent) {
-    app.listen(80);
-    console.log('Rhythm server started');
+    app.listen(config.port);
+    console.log('Rhythm server started at port ' + config.port);
 }
