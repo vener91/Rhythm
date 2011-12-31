@@ -1,137 +1,152 @@
-//Stats Counters
-var gameLoopCount = 0;
-var comboCount = 0;
-var loadingStatus = {
-    loadAudio: false,
-    renderkeys: false
-      
-};
+function rhythmGame(trackName, canvasObj, msgCanvasObj, isLoadedCallback) {  
+    //Stats Counters
+    this.gameLoopCount = 0;
+    this.comboCount = 0;
+    this.loadingStatus = {
+        loadAudio: false,
+        renderkeys: false
+        
+    };
 
-//Variables
-var lastUpdateTime;
-var startGameTime;
-var hitMsg;
-var comboScore = 0;
-var comboY = 0;
-var keyStack = [];
-var clipLibrary = {};
-var barHeight = 0;
-var track;
-var trackName;
+    //Variables
+    this.isLoadedCallback = isLoadedCallback;
+    this.filesToLoad = 2;
+    this.filesLoaded = 0;
+    this.lastUpdateTime;
+    this.startGameTime;
+    this.hitMsg;
+    this.comboScore = 0;
+    this.comboY = 0;
+    this.keyStack = [];
+    this.clipLibrary = {};
+    this.barHeight = 0;
+    this.track;
+    this.trackName = trackName;
 
-//Config
-var speed = 2;
-var gameCanvas = null;
-var gameCanvasCtx = null;
-var gameHeight = null;
-var gameWidth = null;
-var keyboardState = null;
+    //Resources
+    this.skinImg = this.loadImage('/res/skin/rhythm/rhythm-skin.png');;
 
-function preloadTrack(trackName, canvasObj, msgCanvasObj, callback){
-    filesToLoad = 15;
-    filesLoaded = 0;
+    //Config
+    this.speed = 2;
+    this.gameCanvas = canvasObj;
+    this.gameHeight = canvasObj.height;
+    this.gameWidth = canvasObj.width;
+    this.msgCanvas = msgCanvasObj;
+    this.gameCanvasCtx = canvasObj.getContext("2d");
+    //WebGL2D.enable(canvasObj); // adds "webgl-2d" context to cvs
+    //this.gameCanvasCtx = canvasObj.getContext("webgl-2d")
+    this.noteChartCanvas = document.createElement('canvas');
+    this.keyboardState = null;
 
-    var isAppLoaded = function(callback){
-        filesLoaded++;
-        if (filesLoaded >= filesToLoad) {
-          callback();  
-        } 
-    }
-
-    var loadImage = function(uri){
-        var img = new Image();
-        img.onload = isAppLoaded(callback);
-        img.src = uri;
-        return img;
-    }
-
-    var loadAudio = function(trackName, clipName, fileName, callback){
-        $.get("/player/getURI", {track: trackName, file: fileName}, function(data){
-            callback(clipName, data);
-        },"text");
-    }
-    $("#player-load img").attr('src', './res/track/' + trackName + '/album.jpg' );
+    //Start Loading resources
+    $("#player-load img").attr('src', './res/track/' + this.trackName + '/album.jpg' );
     //Load Song
+    var gameObj = this;
     $.getJSON('./res/track/kiss_the_rain/track.json', function(JSONtrack){
-        track = JSONtrack;
-        var framerateObj = $(".stats-framerate");
+        gameObj.track = JSONtrack;
+        //Load audio
+        gameObj.filesToLoad += Object.keys(gameObj.track.clipchart).length;
+        clipLibrary = {}; //Clear library
+        for(clipName in gameObj.track.clipchart){
+            gameObj.loadAudio(clipName, gameObj.track.clipchart[clipName], function(clipName, data){
+               gameObj.clipLibrary[clipName] = data;
+            });
+        }
+        gameObj.isResLoaded();
+    });
+}
 
-        gameCanvas = canvasObj;
-        gameHeight = gameCanvas.height;
-        gameWidth = gameCanvas.width;
-        msgCanvas = msgCanvasObj;
-        gameCanvasCtx = gameCanvas.getContext("2d")
-        //WebGL2D.enable(gameCanvas); // adds "webgl-2d" context to cvs
-        //gameCanvasCtx = gameCanvas.getContext("webgl-2d")
-        skinImg = loadImage('/res/skin/rhythm/rhythm-skin.png');
-        coolNoteImg = loadImage('res/skin/rhythm/cool.png');
-        goodNoteImg = loadImage('res/skin/rhythm/good.png');
-        badNoteImg = loadImage('res/skin/rhythm/bad.png');
-        missNoteImg = loadImage('res/skin/rhythm/miss.png');
-        comboImg = [];
-        comboImg[0] = loadImage('res/skin/rhythm/combo0.png');
-        comboImg[1] = loadImage('res/skin/rhythm/combo1.png');
-        comboImg[2] = loadImage('res/skin/rhythm/combo2.png');
-        comboImg[3] = loadImage('res/skin/rhythm/combo3.png');
-        comboImg[4] = loadImage('res/skin/rhythm/combo4.png');
-        comboImg[5] = loadImage('res/skin/rhythm/combo5.png');
-        comboImg[6] = loadImage('res/skin/rhythm/combo6.png');
-        comboImg[7] = loadImage('res/skin/rhythm/combo7.png');
-        comboImg[8] = loadImage('res/skin/rhythm/combo8.png');
-        comboImg[9] = loadImage('res/skin/rhythm/combo9.png');
+rhythmGame.prototype.isResLoaded = function(callback){
+    this.filesLoaded++;
+    if (this.filesLoaded >= this.filesToLoad) {
+        //Done loading resources, load game now
+        this.loadGame();
+    } 
+}
+
+rhythmGame.prototype.loadImage = function(uri){
+    var img = new Image();
+    img.onload = this.isResLoaded();
+    img.src = uri;
+    return img;
+}
+
+rhythmGame.prototype.loadAudio = function(clipName, fileName, callback){
+    var gameObj = this;
+    $.get("/player/getURI", {track: this.trackName, file: fileName}, function(data){
+        callback(clipName, data);
+        gameObj.isResLoaded();
+    },"text");
+}
+
+rhythmGame.prototype.getAudio = function(clipName){
+    var clip = new Audio();
+    clip.src = this.clipLibrary[clipName];
+    clip.preload = 'auto';
+    return clip;
+}
+
+rhythmGame.prototype.loadGame = function() {
 
         //Start Stats
         //Run fps counter
+        var framerateObj = $(".stats-framerate");
+        var gameObj = this;
         window.setInterval(function(){
-            framerateObj.text(gameLoopCount);
-            gameLoopCount = 0;
+            framerateObj.text(gameObj.gameLoopCount);
+            gameObj.gameLoopCount = 0;
         }, 1000);
-
         //Calcuate speed
-        barHeight = canvasObj.height * 4 * speed / 5;
-        heightPerMilisec = track.bpm / 60 * barHeight / 4000;
-        timePerBar = (track.bpm / 60) * 4000 * speed;
+        this.barHeight = this.gameHeight * 4 * this.speed / 5;
+        this.heightPerMilisec = this.track.bpm / 60 * this.barHeight / 4000;
+        this.timePerBar = (this.track.bpm / 60) * 4000 * this.speed;
         //Load song into memory;
+        
         //Load keys
-        clipLibrary = {}; //Clear library
-        for(clipName in track.clipchart){
-            loadAudio(trackName, clipName, track.clipchart[clipName], function(clipName, data){
-               clipLibrary[clipName] = data; 
-            });
-        }
-        //Load keys
-        keyStack = [] //Clear stack
-        for(var i = 0; i < track.notechart.length; i++){
-            var distancePerStep = barHeight / track.notechart[i].divisions;
-            var currBar = track.notechart[i].data;
+        this.keyStack = [] //Clear stack
+        for(var i = 0; i < this.track.notechart.length; i++){
+            var distancePerStep = this.barHeight / this.track.notechart[i].divisions;
+            var currBar = this.track.notechart[i].data;
             for(var j = 0; j < currBar.length; j++){
-
                 var currRow = currBar[j];
                 if(currRow != null){
                     if(typeof(currRow.w1) != 'undefined'){
-                        keyStack.push({spriteXPos: 0, spriteWidth: 50, x:0, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.w1 });
+                        this.keyStack.push({spriteXPos: 0, spriteWidth: 50, x:0, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w1 });
                     }
                     if(typeof(currRow.b1) != 'undefined'){
-                        keyStack.push({spriteXPos: 50, spriteWidth: 40, x:51, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.b1 });
+                        this.keyStack.push({spriteXPos: 50, spriteWidth: 40, x:51, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.b1 });
                     }
                     if(typeof(currRow.w2) != 'undefined'){
-                        keyStack.push({spriteXPos: 0, spriteWidth: 50, x:92, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.w2 });
+                        this.keyStack.push({spriteXPos: 0, spriteWidth: 50, x:92, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w2 });
                     }
                     if(typeof(currRow.g) != 'undefined'){
-                        keyStack.push({spriteXPos: 91, spriteWidth: 64, x:143, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.g }); 
+                        this.keyStack.push({spriteXPos: 91, spriteWidth: 64, x:143, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.g }); 
                     }
                     if(typeof(currRow.w3) != 'undefined'){
-                        keyStack.push({spriteXPos: 0, spriteWidth: 50, x:208, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.w3 }); 
+                        this.keyStack.push({spriteXPos: 0, spriteWidth: 50, x:208, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w3 }); 
                     }
                     if(typeof(currRow.b2) != 'undefined'){
-                        keyStack.push({spriteXPos: 50, spriteWidth: 40, x:259, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.b2 }); 
+                        this.keyStack.push({spriteXPos: 50, spriteWidth: 40, x:259, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.b2 }); 
                     }
                     if(typeof(currRow.w4) != 'undefined'){
-                        keyStack.push({spriteXPos: 0, spriteWidth: 50, x:300, y:-1 * ((i) * barHeight) - (j * distancePerStep) - 10, clip: currRow.w4 }); 
+                        this.keyStack.push({spriteXPos: 0, spriteWidth: 50, x:300, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w4 }); 
                     }
                 }
             }
         }
+
+        
+        //Pre render notechart
+        var yOffset = this.keyStack[this.keyStack.length-1].y*-1;
+        this.noteChartCanvas.width = this.gameWidth;
+        this.noteChartCanvas.height = Math.ceil(yOffset)/4;
+        var noteChartCanvasCtx = this.noteChartCanvas.getContext("2d");
+        for(i = 0; i < this.keyStack.length; i++){
+            var key = this.keyStack[i];
+            noteChartCanvasCtx.drawImage(this.skinImg, key.spriteXPos, 90, key.spriteWidth, 10, key.x, Math.round(key.y + yOffset)/4, key.spriteWidth, 10);    
+        }
+
+
         //Set up keyboard and keys
         keyboardState = {
             w1:{
@@ -256,33 +271,21 @@ function preloadTrack(trackName, canvasObj, msgCanvasObj, callback){
                 }
             }
         });
-        
-    });    
-}
+        this.isLoadedCallback();
+};
 
-function getAudio(clipName){
-    var clip = new Audio();
-    clip.src = clipLibrary[clipName];
-    clip.preload = 'auto';
-    return clip;
-}
+rhythmGame.prototype.startGame = function() {  
+    window.requestAnimationFrame(this.gameLoop); //Start Game
+};
 
-function playSound(){
+rhythmGame.prototype.gameLoop = function(newTime){
+    gameObj = window.game;
+    gameObj.gameCanvasCtx.clearRect(0, 0, gameObj.gameWidth, gameObj.gameHeight);
     
-}
 
-function changeSpeed(speed){
-    
-}
-
-//Setup game loop
-function rhythmGameLoop(newTime){
-    gameCanvasCtx.clearRect(0, 0, gameCanvas.width, gameHeight);
-    //Make notes readline.Interface(input, output, completer);
-    //var newTime = new Date().getTime();
-    if(lastUpdateTime == null){
-        lastUpdateTime = newTime;
-        startGameTime = newTime;
+    if(gameObj.lastUpdateTime == null){
+        gameObj.lastUpdateTime = newTime;
+        gameObj.startGameTime = newTime;
     }
 
     //Render Bars
@@ -306,38 +309,40 @@ function rhythmGameLoop(newTime){
     gameCanvasCtx.stroke();
     */
     //Render Notes
-    var stackLength = keyStack.length;
+    var stackLength = gameObj.keyStack.length;
     for(i = 0; i < stackLength; i++ ){
-        key = keyStack[i];
+        key = gameObj.keyStack[i];
         //Paint
-        var yPos = ((newTime - startGameTime) * heightPerMilisec) + key.y;
-        if(yPos < gameHeight){
+        var yPos = ((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + key.y;
+        if(yPos < gameObj.gameHeight){
             if(yPos > 0){
-                gameCanvasCtx.drawImage(skinImg, key.spriteXPos, 90, key.spriteWidth, 10, key.x, Math.round(yPos), key.spriteWidth, 10);
+                //gameObj.gameCanvasCtx.drawImage(gameObj.noteChartCanvas, 0, 0, );
+                gameObj.gameCanvasCtx.drawImage(gameObj.skinImg, key.spriteXPos, 90, key.spriteWidth, 10, key.x, Math.round(yPos), key.spriteWidth, 10);
                 //Dynamically load Audio objects
                 if(typeof(key.clip) === 'string'){
-                    keyStack[i].clip = getAudio(key.clip);
+                    gameObj.keyStack[i].clip = gameObj.getAudio(key.clip);
                 }
             } else {
                 break;
             }
         } else {
             //Remove key
-            keyStack.shift();
+            gameObj.keyStack[i].clip.play();
+            gameObj.keyStack.shift();
         }
     }
 
     //Render Msg
-    if(hitMsg != null){
+    if(gameObj.hitMsg != null){
         if(hitMsg.y < 140){
             msgCanvas.getContext("2d").clearRect(0,120, msgCanvas.width, 80); 
             if(hitMsg.y >= 0){
                 msgCanvas.getContext("2d").drawImage(hitMsg.type, Math.floor((msgCanvas.width - hitMsg.type.width)/2), hitMsg.y);
             }
-            hitMsg.y = Math.floor((newTime - lastUpdateTime) * 0.5) + hitMsg.y; 
+            hitMsg.y = Math.floor((newTime - gameObj.lastUpdateTime) * 0.5) + hitMsg.y; 
         }else{
             if(hitMsg.y < 400){
-              hitMsg.y = Math.floor((newTime - lastUpdateTime) * 0.5) + hitMsg.y;          
+              hitMsg.y = Math.floor((newTime - gameObj.lastUpdateTime) * 0.5) + hitMsg.y;          
             }else{
                 hitMsg = null;
                 msgCanvas.getContext("2d").clearRect(0,0, msgCanvas.width, msgCanvas.height);
@@ -346,25 +351,30 @@ function rhythmGameLoop(newTime){
     }
 
     //Render Combo
-    if(comboScore != null && comboScore > 1){
-        if(comboY < 20){
-            msgCanvas.getContext("2d").clearRect(0,0, msgCanvas.width, 120); 
-            var comboString = comboScore.toString();
+    if(gameObj.comboScore != null && gameObj.comboScore > 1){
+        if(gameObj.comboY < 20){
+            gameObj.msgCanvas.getContext("2d").clearRect(0,0, msgCanvas.width, 120); 
+            var comboString = gameObj.comboScore.toString();
             var i = 0;
             var x = Math.floor((msgCanvas.width - comboString.length * 50)/2) //Initial x
             for(var i = 0; i < comboString.length; i++){
                 msgCanvas.getContext("2d").drawImage(comboImg[comboString[i]], x, comboY);
                 x += 50;    
             }
-            comboY = Math.floor((newTime - lastUpdateTime) * 0.5) + comboY; 
+            comboY = Math.floor((newTime - gameObj.lastUpdateTime) * 0.5) + comboY; 
         }
     }
 
-    lastUpdateTime = newTime;
-    gameLoopCount++;
-    if(keyStack.length > 0) {
-        window.requestAnimationFrame(rhythmGameLoop); //Start Game    
+    gameObj.lastUpdateTime = newTime;
+    gameObj.gameLoopCount++;
+    console.info(gameObj.keyStack.length);
+    if(gameObj.keyStack.length > 0) {
+        window.requestAnimationFrame(gameObj.gameLoop); //Start Game    
     }
+}
+
+function playSound(){
+    
 }
 
 function animateLoader(){
@@ -404,7 +414,7 @@ $(document).ready(function(){
     })();
     //Start prequesting assets
     trackName = 'kiss_the_rain';
-    preloadTrack(trackName, $('.player-canvas').get(0), msgCanvas, function(playerRef){
+    window.game = new rhythmGame(trackName, $('.player-canvas').get(0), msgCanvas, function(playerRef){
         $("#player-play-loading").hide();
         $("#player-load-info > div").animate({ paddingRight: 0, opacity: 0, marginLeft: -135}, 1000, function(){
             $(this).remove();
@@ -417,7 +427,7 @@ $(document).ready(function(){
             $(".player-wrap").removeClass("hidden");
             $("#player-load").fadeOut(function(){
                 $(this).remove();
-                 window.requestAnimationFrame(rhythmGameLoop); //Start Game
+                window.game.startGame();
             });
         });
     });
