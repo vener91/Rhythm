@@ -15,7 +15,7 @@
     "passport-local": ">=0.1.0",
     "validator": ">=0.3.7",
     "request": ">=2.9.3",
-    "bufferlist": ">=0.1.0",    
+    "bufferlist": ">=0.1.0",
   },
   "keywords": ["express"],
   "repository": "git://github.com/vener91/Rhythm.git",
