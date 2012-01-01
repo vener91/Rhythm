@@ -32,9 +32,9 @@ function rhythmGame(trackName, canvasObj, msgCanvasObj, isLoadedCallback) {
     this.gameWidth = canvasObj.width;
     this.msgCanvas = msgCanvasObj;
     this.msgCanvasCtx = msgCanvasObj.getContext("2d");
-    this.gameCanvasCtx = canvasObj.getContext("2d");
-    //WebGL2D.enable(canvasObj); // adds "webgl-2d" context to cvs
-    //this.gameCanvasCtx = canvasObj.getContext("webgl-2d")
+    //this.gameCanvasCtx = canvasObj.getContext("2d");
+    WebGL2D.enable(canvasObj); // adds "webgl-2d" context to cvs
+    this.gameCanvasCtx = canvasObj.getContext("webgl-2d")
     this.noteCharts = [];
     this.keyboardState = null;
 
@@ -113,7 +113,7 @@ rhythmGame.prototype.loadGame = function() {
             barChartCanvas.height = this.barHeight;
             var barChartCtx = barChartCanvas.getContext("2d");
             //Draw barLine
-            barChartCtx.strokeStyle = '#333333'
+            barChartCtx.strokeStyle = '#FFFFFF'
             barChartCtx.beginPath();
             barChartCtx.moveTo(0, 0);
             barChartCtx.lineTo(350, 0);
@@ -150,19 +150,6 @@ rhythmGame.prototype.loadGame = function() {
             }
             this.noteCharts.push(barChartCanvas);
         }
-
-        /*
-        //Pre render notechart
-        var barChartCanvas = document.createElement("canvas");
-        barChartCanvas.width = this.gameWidth;
-        barChartCanvas.height = this.barHeight;
-        var barChartCtx = barChartCanvas.getContext("2d");
-        for(i = 0; i < this.keyStack.length; i++){
-        
-            var key = this.keyStack[i];
-            noteChartCanvasCtx.drawImage(this.skinImg, key.spriteXPos, 90, key.spriteWidth, 10, key.x, Math.round(key.y + yOffset)/4, key.spriteWidth, 10);    
-        }
-        */
 
         //Set up keyboard and keys
         keyboardState = {
@@ -305,26 +292,6 @@ rhythmGame.prototype.gameLoop = function(newTime){
         gameObj.startGameTime = newTime;
     }
 
-    //Render Bars
-    /*
-    firstBarY = ((newTime - startGameTime) % timePerBar) * heightPerMilisec;
-    var i = 0;
-    gameCanvasCtx.strokeStyle = '#FFFFFF'
-    gameCanvasCtx.beginPath();
-    while(firstBarY + (i * barHeight ) < gameHeight){
-        gameCanvasCtx.moveTo(0,firstBarY + (i * barHeight ));  
-        gameCanvasCtx.lineTo(350,firstBarY + (i * barHeight ));  
-        i++;       
-    }
-    i = 1
-    while(firstBarY - (i * barHeight ) > 0){
-        gameCanvasCtx.moveTo(0,firstBarY - (i * barHeight ));  
-        gameCanvasCtx.lineTo(350,firstBarY - (i * barHeight ));  
-        i++;   
-    }
-    gameCanvasCtx.closePath();
-    gameCanvasCtx.stroke();
-    */
     //Render Bars
     //game.gameCanvasCtx.drawImage(game.noteCharts[3],0,0)
     var chartLength = gameObj.noteCharts.length;
