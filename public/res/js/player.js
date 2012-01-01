@@ -22,20 +22,20 @@ function rhythmGame(trackName, canvasObj, msgCanvasObj, isLoadedCallback) {
     this.barHeight = 0;
     this.track;
     this.trackName = trackName;
-
     //Resources
     this.skinImg = this.loadImage('/res/skin/rhythm/rhythm-skin.png');;
 
     //Config
-    this.speed = 2;
+    this.speed = 1;
     this.gameCanvas = canvasObj;
     this.gameHeight = canvasObj.height;
     this.gameWidth = canvasObj.width;
     this.msgCanvas = msgCanvasObj;
+    this.msgCanvasCtx = msgCanvasObj.getContext("2d");
     this.gameCanvasCtx = canvasObj.getContext("2d");
     //WebGL2D.enable(canvasObj); // adds "webgl-2d" context to cvs
     //this.gameCanvasCtx = canvasObj.getContext("webgl-2d")
-    this.noteChartCanvas = document.createElement('canvas');
+    this.noteCharts = [];
     this.keyboardState = null;
 
     //Start Loading resources
@@ -107,9 +107,22 @@ rhythmGame.prototype.loadGame = function() {
         for(var i = 0; i < this.track.notechart.length; i++){
             var distancePerStep = this.barHeight / this.track.notechart[i].divisions;
             var currBar = this.track.notechart[i].data;
+            //Pre render notechart
+            var barChartCanvas = document.createElement("canvas");
+            barChartCanvas.width = this.gameWidth;
+            barChartCanvas.height = this.barHeight;
+            var barChartCtx = barChartCanvas.getContext("2d");
+            //Draw barLine
+            barChartCtx.strokeStyle = '#333333'
+            barChartCtx.beginPath();
+            barChartCtx.moveTo(0, 0);
+            barChartCtx.lineTo(350, 0);
+            barChartCtx.closePath();
+            barChartCtx.stroke();
             for(var j = 0; j < currBar.length; j++){
                 var currRow = currBar[j];
-                if(currRow != null){
+                
+                if(currRow != null && Object.keys(currRow).length != 0){
                     if(typeof(currRow.w1) != 'undefined'){
                         this.keyStack.push({spriteXPos: 0, spriteWidth: 50, x:0, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w1 });
                     }
@@ -131,21 +144,25 @@ rhythmGame.prototype.loadGame = function() {
                     if(typeof(currRow.w4) != 'undefined'){
                         this.keyStack.push({spriteXPos: 0, spriteWidth: 50, x:300, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w4 }); 
                     }
+                    var key = this.keyStack[this.keyStack.length - 1];
+                    barChartCtx.drawImage(this.skinImg, key.spriteXPos, 90, key.spriteWidth, 10, key.x, Math.round(this.barHeight - (j * distancePerStep) - 10), key.spriteWidth, 10);
                 }
             }
+            this.noteCharts.push(barChartCanvas);
         }
 
-        
+        /*
         //Pre render notechart
-        var yOffset = this.keyStack[this.keyStack.length-1].y*-1;
-        this.noteChartCanvas.width = this.gameWidth;
-        this.noteChartCanvas.height = Math.ceil(yOffset)/4;
-        var noteChartCanvasCtx = this.noteChartCanvas.getContext("2d");
+        var barChartCanvas = document.createElement("canvas");
+        barChartCanvas.width = this.gameWidth;
+        barChartCanvas.height = this.barHeight;
+        var barChartCtx = barChartCanvas.getContext("2d");
         for(i = 0; i < this.keyStack.length; i++){
+        
             var key = this.keyStack[i];
             noteChartCanvasCtx.drawImage(this.skinImg, key.spriteXPos, 90, key.spriteWidth, 10, key.x, Math.round(key.y + yOffset)/4, key.spriteWidth, 10);    
         }
-
+        */
 
         //Set up keyboard and keys
         keyboardState = {
@@ -308,16 +325,36 @@ rhythmGame.prototype.gameLoop = function(newTime){
     gameCanvasCtx.closePath();
     gameCanvasCtx.stroke();
     */
+    //Render Bars
+    //game.gameCanvasCtx.drawImage(game.noteCharts[3],0,0)
+    var chartLength = gameObj.noteCharts.length;
+    for(var i = 0; i < chartLength; i++){
+        if(!(typeof(gameObj.noteCharts[i]) === "undefined")){
+            var yPos = ((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) - ((i + 1) * gameObj.barHeight);
+            
+            if(yPos < gameObj.gameHeight){
+                if(yPos > -1 * gameObj.barHeight){
+                    gameObj.gameCanvasCtx.drawImage(gameObj.noteCharts[i], 0, yPos);
+                } else {
+                    break;
+                }
+            } else {
+                //Remove key
+                delete gameObj.noteCharts[i];
+            }
+        }
+    }
+
     //Render Notes
     var stackLength = gameObj.keyStack.length;
-    for(i = 0; i < stackLength; i++ ){
+    for(var i = 0; i < stackLength; i++ ){
         key = gameObj.keyStack[i];
         //Paint
         var yPos = ((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + key.y;
         if(yPos < gameObj.gameHeight){
             if(yPos > 0){
                 //gameObj.gameCanvasCtx.drawImage(gameObj.noteChartCanvas, 0, 0, );
-                gameObj.gameCanvasCtx.drawImage(gameObj.skinImg, key.spriteXPos, 90, key.spriteWidth, 10, key.x, Math.round(yPos), key.spriteWidth, 10);
+                //gameObj.gameCanvasCtx.drawImage(gameObj.skinImg, key.spriteXPos, 90, key.spriteWidth, 10, key.x, Math.round(yPos), key.spriteWidth, 10);
                 //Dynamically load Audio objects
                 if(typeof(key.clip) === 'string'){
                     gameObj.keyStack[i].clip = gameObj.getAudio(key.clip);
@@ -331,43 +368,44 @@ rhythmGame.prototype.gameLoop = function(newTime){
             gameObj.keyStack.shift();
         }
     }
-
+    //breakprocess;
     //Render Msg
+    //Render with gameObj.hitMsg = {spriteXPos:250, spriteYPos:160, y:120}
     if(gameObj.hitMsg != null){
-        if(hitMsg.y < 140){
-            msgCanvas.getContext("2d").clearRect(0,120, msgCanvas.width, 80); 
-            if(hitMsg.y >= 0){
-                msgCanvas.getContext("2d").drawImage(hitMsg.type, Math.floor((msgCanvas.width - hitMsg.type.width)/2), hitMsg.y);
+        if(gameObj.hitMsg.y < 140){ //Distance
+            gameObj.msgCanvasCtx.clearRect(0,120, gameObj.msgCanvas.width, 80); 
+            if(gameObj.hitMsg.y >= 0){
+                gameObj.msgCanvasCtx.drawImage(gameObj.skinImg, gameObj.hitMsg.spriteXPos, gameObj.hitMsg.spriteYPos, 250, 60, Math.floor((gameObj.msgCanvas.width - 250)/2), gameObj.hitMsg.y, 250, 60);
             }
-            hitMsg.y = Math.floor((newTime - gameObj.lastUpdateTime) * 0.5) + hitMsg.y; 
-        }else{
-            if(hitMsg.y < 400){
-              hitMsg.y = Math.floor((newTime - gameObj.lastUpdateTime) * 0.5) + hitMsg.y;          
-            }else{
-                hitMsg = null;
-                msgCanvas.getContext("2d").clearRect(0,0, msgCanvas.width, msgCanvas.height);
+            gameObj.hitMsg.y = Math.floor((newTime - gameObj.lastUpdateTime) * 0.5) + gameObj.hitMsg.y; 
+        } else {
+            if(gameObj.hitMsg.y < 400){
+              gameObj.hitMsg.y = Math.floor((newTime - gameObj.lastUpdateTime) * 0.5) + gameObj.hitMsg.y;          
+            } else {
+                gameObj.hitMsg = null;
+                gameObj.msgCanvasCtx.clearRect(0,0, gameObj.msgCanvas.width, gameObj.msgCanvas.height);
             }
         }
     }
 
     //Render Combo
+    //Render with game.comboScore++; game.comboY = 0;
     if(gameObj.comboScore != null && gameObj.comboScore > 1){
         if(gameObj.comboY < 20){
-            gameObj.msgCanvas.getContext("2d").clearRect(0,0, msgCanvas.width, 120); 
+            gameObj.msgCanvasCtx.clearRect(0,0, gameObj.msgCanvas.width, 120); 
             var comboString = gameObj.comboScore.toString();
             var i = 0;
-            var x = Math.floor((msgCanvas.width - comboString.length * 50)/2) //Initial x
+            var x = Math.floor((gameObj.msgCanvas.width - comboString.length * 50)/2) //Initial x
             for(var i = 0; i < comboString.length; i++){
-                msgCanvas.getContext("2d").drawImage(comboImg[comboString[i]], x, comboY);
+                gameObj.msgCanvasCtx.drawImage(gameObj.skinImg, parseInt(comboString[i]) * 50, 0, 50, 90, x, gameObj.comboY, 50, 90);
                 x += 50;    
             }
-            comboY = Math.floor((newTime - gameObj.lastUpdateTime) * 0.5) + comboY; 
+            gameObj.comboY = Math.floor((newTime - gameObj.lastUpdateTime) * 0.5) + gameObj.comboY; 
         }
     }
 
     gameObj.lastUpdateTime = newTime;
     gameObj.gameLoopCount++;
-    console.info(gameObj.keyStack.length);
     if(gameObj.keyStack.length > 0) {
         window.requestAnimationFrame(gameObj.gameLoop); //Start Game    
     }
