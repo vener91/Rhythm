@@ -105,12 +105,12 @@ fs.readdir(__dirname + '/app/model', function(err, files){
 });
 
 //Include Controllers here
-require(__dirname + '/app/controller/site')(app);
-require(__dirname + '/app/controller/player')(app);
-require(__dirname + '/app/controller/dash')(app);
-require(__dirname + '/app/controller/auth')(app);
-require(__dirname + '/app/controller/user')(app);
-require(__dirname + '/app/controller/notification')(app);
+fs.readdir(__dirname + '/app/controller', function(err, files){
+  if (err) throw err;
+  files.forEach(function(file){
+    require(__dirname + '/app/controller/' + file)(app);
+  });
+});
 
 if (!module.parent) {
     app.listen(config.port);

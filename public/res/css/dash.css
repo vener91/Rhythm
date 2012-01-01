@@ -27,10 +27,12 @@
     float: left;
     width: 100%;
     margin-right: -340px;
+    margin-left: -290px;
 }
 
 #dash-div > div{
     margin-right: 340px;
+    margin-left: 290px;
     color:#EFEFEF;
     border-radius:5px;
 }
@@ -40,7 +42,27 @@
     padding:20px 0px 5px 15px;
 }
 
-#sidebar-div{
+#left-sidebar-div{
+    float: left;
+    width: 210px;
+    padding: 10px 15px 20px 60px;
+}
+
+#player-avatar{
+    width: 75px;
+    margin: 20px 10px -10px 5px;
+    border: 1px dashed white;
+}
+
+#player-stats{
+    margin-top: 20px;
+}
+
+#player-stats .ui-progress-bar{
+    
+}
+
+#right-sidebar-div{
     float: right;
     width: 300px;
     padding: 20px 15px 20px 20px;
