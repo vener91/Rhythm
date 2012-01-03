@@ -1,5 +1,5 @@
 module.exports = function(app){
-    app.get('/player', app.passport.isLoggedIn, function(req, res){
+    app.get('/player/play/:track', app.passport.isLoggedIn, function(req, res){
         res.render('player', {
 	        layout: 'page-layout',
             scripts: ['player', 'webgl-2d'],
@@ -7,6 +7,9 @@ module.exports = function(app){
             title: app.title + ' - Player',
             user: {
             	username: 'Rhythmuser'
+            },
+            track: {
+                title: req.params.track
             }
         });
     });

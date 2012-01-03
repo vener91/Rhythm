@@ -39,10 +39,10 @@ function rhythmGame(trackName, canvasObj, msgCanvasObj, isLoadedCallback) {
     this.keyboardState = null;
 
     //Start Loading resources
-    $("#player-load img").attr('src', './res/track/' + this.trackName + '/album.jpg' );
+    $("#player-load img").attr('src', '/res/track/' + this.trackName + '/album.jpg' );
     //Load Song
     var gameObj = this;
-    $.getJSON('./res/track/kiss_the_rain/track.json', function(JSONtrack){
+    $.getJSON('/res/track/' + gameObj.trackName + '/track.json', function(JSONtrack){
         gameObj.track = JSONtrack;
         //Load audio
         gameObj.filesToLoad += Object.keys(gameObj.track.clipchart).length;
@@ -418,7 +418,7 @@ $(document).ready(function(){
               };
     })();
     //Start prequesting assets
-    trackName = 'kiss_the_rain';
+    var trackName = $("#track-title").text();
     window.game = new rhythmGame(trackName, $('.player-canvas').get(0), msgCanvas, function(playerRef){
         $("#player-play-loading").hide();
         $("#player-load-info > div").animate({ paddingRight: 0, opacity: 0, marginLeft: -135}, 1000, function(){

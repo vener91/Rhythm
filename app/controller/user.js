@@ -32,4 +32,17 @@ module.exports = function(app){
             }
         });
     });
+    app.get('/user/settings', app.passport.isLoggedIn, function(req, res){
+        res.render('user', {
+            layout: 'page-layout',
+            scripts: [],
+            styles: ['user'],
+            title: app.title + ' - User Settings',
+            settings: {},
+            user: {
+                username: 'Rhythmuser'
+            }
+        });
+    });
+
 };
