@@ -39,9 +39,7 @@ module.exports = function(app){
             styles: ['user'],
             title: app.title + ' - User Settings',
             settings: {},
-            user: {
-                username: 'Rhythmuser'
-            }
+            user: req.user
         });
     });
 

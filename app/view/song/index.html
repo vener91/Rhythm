@@ -1,23 +1,24 @@
 <div>
-    <div id="song-div">
-        <div class="mushroom-title">Song List</div>
-        <div class="mushroom-sandwich"><input type="search" placeholder="search"/></div>
-        <ul id="songs-list">
-            <li class="lvl-1">
-                <div class="song-name">Clear Blue Sky</div><div class="artist">Tsukasa</div>
-            </li>
+    <div id="ui-left-div">
+        <h2>Search</h2>
+        <input id="song-search" type="text" placeholder="Type in a song name"/>
+        <h2>Browse</h2>
+        <ul id="init-selector">
+            <li>All songs</li>
+            <li>By artist</li>
+            <li>By genre</li>
+            <li>By difficulty</li>
         </ul>
+        <h2>Current Queue</h2>
     </div>
-    <div id="song-dash-div">
+    <div id="ui-center-div">
         <div>
-            <div>
-                <div class="mushroom-title">Recently Played</div>
-                <div></div>
-                <div class="mushroom-title">Song Recommendations</div>
-                <div></div>
-                <div id="song-stats-div">
-                </div>
+            <div class="ui-mushroom-title" id="search-title">Newly Added Songs</div>
+            <div class="ui-mushroom-content" id="search-content">
+                
             </div>
         </div>
+    </div>
+    <div id="ui-right-div">
     </div>
 </div>

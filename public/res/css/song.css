@@ -1,0 +1,29 @@
+ul#init-selector{
+	list-style: none;
+	color: #999;
+	margin-left: 40px;
+	cursor: pointer;
+}
+
+ul#init-selector > li{
+	display: block;
+}
+
+ul#init-selector > li:hover{
+	color: #fff;
+}
+
+input#song-search {
+	margin: 5px 0px 0px 20px;
+	background-color: #EFEFEF;
+	border: none;
+	border-radius: 17px;
+	font-size: 18px;
+	padding: 3px 6px 3px 6px;
+	width: 190px;
+	box-shadow: inset 1px 1px 5px #000;
+}
+
+input#song-search:focus {
+    outline: none;
+}

@@ -5,9 +5,7 @@ module.exports = function(app){
             scripts: ['player', 'webgl-2d'],
             styles: ['player'],
             title: app.title + ' - Player',
-            user: {
-            	username: 'Rhythmuser'
-            },
+            user: req.user,
             track: {
                 title: req.params.track
             }

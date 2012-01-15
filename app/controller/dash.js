@@ -5,9 +5,7 @@ module.exports = function(app){
             title: app.title + '- Dashboard',
             scripts: [],
             styles: ['dash'],
-            user: {
-            	username: 'Rhythmuser'
-            }
+            user: req.user
         });
 	});
 };

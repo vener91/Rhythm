@@ -27,6 +27,8 @@ module.exports = function(app){
     facebook_id: { type: String },
     join_date: { type: Date, default: Date.now },
     verified: { type: Boolean, default: false },
+    level: { type: Number, min: 0, max: 100 }, //Max level of 100
+    level_up_exp : { type: Number, min: 0 },
     sockets: [String],
     
   });
