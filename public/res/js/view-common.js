@@ -32,4 +32,20 @@
         }
     }
 
+    $.setBGM = function(name){
+        bgm = new Audio('/res/bgm/' + name + '.mp3'); 
+        bgm.addEventListener('ended', function() {
+            this.currentTime = 0;
+            this.play();
+        }, false);
+        bgm.play();
+        $("#bgm-toggle").show().on("click", function(){ 
+            if(bgm.paused){
+                bgm.play();
+            }else{
+                bgm.pause();
+            }
+        });
+    }
+
 })(jQuery);

@@ -8,6 +8,8 @@ function rhythmGame(trackName, canvasObj, msgCanvasObj, isLoadedCallback) {
         
     };
 
+    this.loader = new PxLoader();
+
     //Variables
     this.isLoadedCallback = isLoadedCallback;
     this.filesToLoad = 2;
@@ -23,7 +25,7 @@ function rhythmGame(trackName, canvasObj, msgCanvasObj, isLoadedCallback) {
     this.track;
     this.trackName = trackName;
     //Resources
-    this.skinImg = this.loadImage('/res/skin/rhythm/rhythm-skin.png');;
+    this.skinImg = loader.addImage('/res/skin/rhythm/rhythm-skin.png');
 
     //Config
     this.speed = 1;
@@ -40,9 +42,22 @@ function rhythmGame(trackName, canvasObj, msgCanvasObj, isLoadedCallback) {
 
     //Start Loading resources
     $("#player-load img").attr('src', '/res/track/' + this.trackName + '/album.jpg' );
+
+    soundManager.url = '/path/to/swf-files/';
+    soundManager.flashVersion = 9; // optional: shiny features (default = 8)
+    soundManager.useFlashBlock = false; // optionally, enable when you're ready to dive in
+    /*
+     * read up on HTML5 audio support, if you're feeling adventurous.
+     * iPad/iPhone and devices without flash installed will always attempt to use it.
+    */
+    soundManager.onready(function() {
+      // Ready to use; soundManager.createSound() etc. can now be called.
+    });
+    
     //Load Song
     var gameObj = this;
     $.getJSON('/res/track/' + gameObj.trackName + '/track.json', function(JSONtrack){
+
         gameObj.track = JSONtrack;
         //Load audio
         gameObj.filesToLoad += Object.keys(gameObj.track.clipchart).length;
@@ -52,7 +67,11 @@ function rhythmGame(trackName, canvasObj, msgCanvasObj, isLoadedCallback) {
                gameObj.clipLibrary[clipName] = data;
             });
         }
-        gameObj.isResLoaded();
+
+        gameObj.loader.addCompletionListener(function() {
+            gameObj.loadGame();
+        });
+        loader.start();
     });
 }
 
@@ -417,6 +436,7 @@ $(document).ready(function(){
                 window.setTimeout(callback, 1000 / 60);
               };
     })();
+    
     //Start prequesting assets
     var trackName = $("#track-title").text();
     window.game = new rhythmGame(trackName, $('.player-canvas').get(0), msgCanvas, function(playerRef){
