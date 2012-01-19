@@ -25,53 +25,57 @@ function rhythmGame(trackName, canvasObj, msgCanvasObj, isLoadedCallback) {
     this.track;
     this.trackName = trackName;
     //Resources
-    this.skinImg = loader.addImage('/res/skin/rhythm/rhythm-skin.png');
+    this.skinImg = this.loader.addImage('/res/skin/rhythm/rhythm-skin.png');
 
     //Config
-    this.speed = 1;
+    this.speed = 2.5;
     this.gameCanvas = canvasObj;
     this.gameHeight = canvasObj.height;
     this.gameWidth = canvasObj.width;
     this.msgCanvas = msgCanvasObj;
     this.msgCanvasCtx = msgCanvasObj.getContext("2d");
-    //this.gameCanvasCtx = canvasObj.getContext("2d");
-    WebGL2D.enable(canvasObj); // adds "webgl-2d" context to cvs
-    this.gameCanvasCtx = canvasObj.getContext("webgl-2d")
+    this.gameCanvasCtx = canvasObj.getContext("2d");
+    //WebGL2D.enable(canvasObj); // adds "webgl-2d" context to cvs
+    //this.gameCanvasCtx = canvasObj.getContext("webgl-2d")
     this.noteCharts = [];
     this.keyboardState = null;
 
     //Start Loading resources
     $("#player-load img").attr('src', '/res/track/' + this.trackName + '/album.jpg' );
 
-    soundManager.url = '/path/to/swf-files/';
+    soundManager.url = '/res/swf';
     soundManager.flashVersion = 9; // optional: shiny features (default = 8)
     soundManager.useFlashBlock = false; // optionally, enable when you're ready to dive in
+    soundManager.preferFlash = true;
     /*
      * read up on HTML5 audio support, if you're feeling adventurous.
      * iPad/iPhone and devices without flash installed will always attempt to use it.
     */
-    soundManager.onready(function() {
-      // Ready to use; soundManager.createSound() etc. can now be called.
-    });
-    
-    //Load Song
     var gameObj = this;
-    $.getJSON('/res/track/' + gameObj.trackName + '/track.json', function(JSONtrack){
+    soundManager.onready(function() {
+        //Load Song
+        $.getJSON('/res/track/' + gameObj.trackName + '/track.json', function(JSONtrack){
 
-        gameObj.track = JSONtrack;
-        //Load audio
-        gameObj.filesToLoad += Object.keys(gameObj.track.clipchart).length;
-        clipLibrary = {}; //Clear library
-        for(clipName in gameObj.track.clipchart){
-            gameObj.loadAudio(clipName, gameObj.track.clipchart[clipName], function(clipName, data){
-               gameObj.clipLibrary[clipName] = data;
+            gameObj.track = JSONtrack;
+            //Load audio
+            gameObj.filesToLoad += Object.keys(gameObj.track.clipchart).length;
+            gameObj.clipLibrary = {}; //Clear library
+            for(clipName in gameObj.track.clipchart){
+                //console.info(clipName, '/res/track/' + gameObj.trackName + '/' + gameObj.track.clipchart[clipName]);
+                gameObj.loader.addSound(clipName, '/res/track/' + gameObj.trackName + '/' + gameObj.track.clipchart[clipName]);
+                /*
+                this.skinImg = this.loader.addImage('/res/skin/rhythm/rhythm-skin.png');
+                gameObj.loadAudio(clipName, gameObj.track.clipchart[clipName], function(clipName, data){
+                   gameObj.clipLibrary[clipName] = data;
+                });
+                */
+            }
+
+            gameObj.loader.addCompletionListener(function() {
+                gameObj.loadGame();
             });
-        }
-
-        gameObj.loader.addCompletionListener(function() {
-            gameObj.loadGame();
+            gameObj.loader.start();
         });
-        loader.start();
     });
 }
 
@@ -122,7 +126,15 @@ rhythmGame.prototype.loadGame = function() {
         //Load song into memory;
         
         //Load keys
-        this.keyStack = [] //Clear stack
+        this.keyStack = {} //Clear stack
+        this.keyStack.w1 = [];
+        this.keyStack.b1 = [];
+        this.keyStack.w2 = [];
+        this.keyStack.g = [];
+        this.keyStack.w3 = [];
+        this.keyStack.b2 = [];
+        this.keyStack.w4 = [];
+
         for(var i = 0; i < this.track.notechart.length; i++){
             var distancePerStep = this.barHeight / this.track.notechart[i].divisions;
             var currBar = this.track.notechart[i].data;
@@ -143,28 +155,34 @@ rhythmGame.prototype.loadGame = function() {
                 
                 if(currRow != null && Object.keys(currRow).length != 0){
                     if(typeof(currRow.w1) != 'undefined'){
-                        this.keyStack.push({spriteXPos: 0, spriteWidth: 50, x:0, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w1 });
+                        this.keyStack.w1.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w1 });
+                        barChartCtx.drawImage(this.skinImg, 0, 90, 50, 10, 0, Math.round(this.barHeight - (j * distancePerStep) - 10), 50, 10);    
                     }
                     if(typeof(currRow.b1) != 'undefined'){
-                        this.keyStack.push({spriteXPos: 50, spriteWidth: 40, x:51, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.b1 });
+                        this.keyStack.b1.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.b1 });
+                        barChartCtx.drawImage(this.skinImg, 50, 90, 40, 10, 51, Math.round(this.barHeight - (j * distancePerStep) - 10), 40, 10);    
                     }
                     if(typeof(currRow.w2) != 'undefined'){
-                        this.keyStack.push({spriteXPos: 0, spriteWidth: 50, x:92, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w2 });
+                        this.keyStack.w2.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w2 });
+                        barChartCtx.drawImage(this.skinImg, 0, 90, 50, 10, 92, Math.round(this.barHeight - (j * distancePerStep) - 10), 50, 10);
                     }
                     if(typeof(currRow.g) != 'undefined'){
-                        this.keyStack.push({spriteXPos: 91, spriteWidth: 64, x:143, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.g }); 
+                        this.keyStack.g.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.g }); 
+                        barChartCtx.drawImage(this.skinImg, 91, 90, 64, 10, 143, Math.round(this.barHeight - (j * distancePerStep) - 10), 64, 10);    
                     }
                     if(typeof(currRow.w3) != 'undefined'){
-                        this.keyStack.push({spriteXPos: 0, spriteWidth: 50, x:208, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w3 }); 
+                        this.keyStack.w3.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w3 }); 
+                        barChartCtx.drawImage(this.skinImg, 0, 90, 50, 10, 208, Math.round(this.barHeight - (j * distancePerStep) - 10), 50, 10);
                     }
                     if(typeof(currRow.b2) != 'undefined'){
-                        this.keyStack.push({spriteXPos: 50, spriteWidth: 40, x:259, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.b2 }); 
+                        this.keyStack.b2.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.b2 }); 
+                        barChartCtx.drawImage(this.skinImg, 50, 90, 40, 10, 259, Math.round(this.barHeight - (j * distancePerStep) - 10), 40, 10);    
                     }
                     if(typeof(currRow.w4) != 'undefined'){
-                        this.keyStack.push({spriteXPos: 0, spriteWidth: 50, x:300, y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w4 }); 
+                        this.keyStack.w4.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w4 }); 
+                        barChartCtx.drawImage(this.skinImg, 0, 90, 50, 10, 300, Math.round(this.barHeight - (j * distancePerStep) - 10), 50, 10);
                     }
-                    var key = this.keyStack[this.keyStack.length - 1];
-                    barChartCtx.drawImage(this.skinImg, key.spriteXPos, 90, key.spriteWidth, 10, key.x, Math.round(this.barHeight - (j * distancePerStep) - 10), key.spriteWidth, 10);
+                    
                 }
             }
             this.noteCharts.push(barChartCanvas);
@@ -174,57 +192,50 @@ rhythmGame.prototype.loadGame = function() {
         keyboardState = {
             w1:{
                 isPressed: false,
-                clipObject: null,
                 playSound: function(){
-                    playSound(this.clipObject);
+                    soundManager.play(gameObj.keyStack.w1[0].clip);
                 },
                 keyObject: $(".w1")   
             },
             b1:{
                 isPressed: false,
-                clipObject: null,
                 playSound: function(){
-                    playSound(this.clipObject);
+                    soundManager.play(gameObj.keyStack.b1[0].clip);
                 },
                 keyObject: $(".b1")
             },
             w2:{
                 isPressed: false,
-                clipObject: null,
                 playSound: function(){
-                    playSound(this.clipObject);
+                    soundManager.play(gameObj.keyStack.w2[0].clip);
                 },
                 keyObject: $(".w2")
             },
             g:{
                 isPressed: false,
-                clipObject: null,
                 playSound: function(){
-                    playSound(this.clipObject);
+                    soundManager.play(gameObj.keyStack.g[0].clip);
                 },
                 keyObject: $(".g")
             },
             w3:{
                 isPressed: false,
-                clipObject: null,
                 playSound: function(){
-                    playSound(this.clipObject);
+                    soundManager.play(gameObj.keyStack.w3[0].clip);
                 },
                 keyObject: $(".w3")
             },
             b2:{
                 isPressed: false,
-                clipObject: null,
                 playSound: function(){
-                    playSound(this.clipObject);
+                    soundManager.play(gameObj.keyStack.b2[0].clip);
                 },
                 keyObject: $(".b2")
             },
             w4:{
                 isPressed: false,
-                clipObject: null,
                 playSound: function(){
-                    playSound(this.clipObject);
+                    soundManager.play(gameObj.keyStack.w4[0].clip);
                 },
                 keyObject: $(".w4")
             },
@@ -317,7 +328,6 @@ rhythmGame.prototype.gameLoop = function(newTime){
     for(var i = 0; i < chartLength; i++){
         if(!(typeof(gameObj.noteCharts[i]) === "undefined")){
             var yPos = ((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) - ((i + 1) * gameObj.barHeight);
-            
             if(yPos < gameObj.gameHeight){
                 if(yPos > -1 * gameObj.barHeight){
                     gameObj.gameCanvasCtx.drawImage(gameObj.noteCharts[i], 0, yPos);
@@ -331,29 +341,29 @@ rhythmGame.prototype.gameLoop = function(newTime){
         }
     }
 
-    //Render Notes
-    var stackLength = gameObj.keyStack.length;
-    for(var i = 0; i < stackLength; i++ ){
-        key = gameObj.keyStack[i];
-        //Paint
-        var yPos = ((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + key.y;
-        if(yPos < gameObj.gameHeight){
-            if(yPos > 0){
-                //gameObj.gameCanvasCtx.drawImage(gameObj.noteChartCanvas, 0, 0, );
-                //gameObj.gameCanvasCtx.drawImage(gameObj.skinImg, key.spriteXPos, 90, key.spriteWidth, 10, key.x, Math.round(yPos), key.spriteWidth, 10);
-                //Dynamically load Audio objects
-                if(typeof(key.clip) === 'string'){
-                    gameObj.keyStack[i].clip = gameObj.getAudio(key.clip);
-                }
-            } else {
-                break;
-            }
-        } else {
-            //Remove key
-            gameObj.keyStack[i].clip.play();
-            gameObj.keyStack.shift();
-        }
+    //Remove old notes
+    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.w1[0].y > gameObj.gameHeight){
+        gameObj.keyStack.w1.shift();
     }
+    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.b1[0].y > gameObj.gameHeight){
+        gameObj.keyStack.b1.shift();
+    }
+    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.w2[0].y > gameObj.gameHeight){
+        gameObj.keyStack.w2.shift();
+    }
+    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.g[0].y > gameObj.gameHeight){
+        gameObj.keyStack.g.shift();
+    }
+    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.w3[0].y > gameObj.gameHeight){
+        gameObj.keyStack.w3.shift();
+    }
+    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.b2[0].y > gameObj.gameHeight){
+        gameObj.keyStack.b2.shift();
+    }
+    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.w4[0].y > gameObj.gameHeight){
+        gameObj.keyStack.w4.shift();
+    }
+    
     //breakprocess;
     //Render Msg
     //Render with gameObj.hitMsg = {spriteXPos:250, spriteYPos:160, y:120}
@@ -392,13 +402,15 @@ rhythmGame.prototype.gameLoop = function(newTime){
 
     gameObj.lastUpdateTime = newTime;
     gameObj.gameLoopCount++;
-    if(gameObj.keyStack.length > 0) {
+    if( gameObj.keyStack.w1.length > 0 || 
+        gameObj.keyStack.b1.length > 0 || 
+        gameObj.keyStack.w2.length > 0 || 
+        gameObj.keyStack.g.length > 0 || 
+        gameObj.keyStack.w3.length > 0 || 
+        gameObj.keyStack.b2.length > 0|| 
+        gameObj.keyStack.w4.length > 0) {
         window.requestAnimationFrame(gameObj.gameLoop); //Start Game    
     }
-}
-
-function playSound(){
-    
 }
 
 function animateLoader(){

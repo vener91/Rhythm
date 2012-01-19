@@ -54,11 +54,11 @@ function lcm_nums(ar) {
 }
 
 //Iterates through each dir
-fs.readdir('./convertor/BMS', function(err, songDirs){
+fs.readdir('./build/BMS', function(err, songDirs){
 	if (err) throw err;
 	for(var i = 0; i < songDirs.length; i++){
 		var songDir = songDirs[i];
-		fileNames = fs.readdirSync('./convertor/BMS/' + songDir);
+		fileNames = fs.readdirSync('./build/BMS/' + songDir);
 		for(var j = 0; j < fileNames.length; j++){
 			var fileName = fileNames[j];
 			if(fileName.substring(fileName.length - 3) == 'bms'){
@@ -68,7 +68,7 @@ fs.readdir('./convertor/BMS', function(err, songDirs){
 				var lastBarPosition = null;
 				var songData;
 
-				data = fs.readFileSync('./convertor/BMS/' + songDir + '/' + fileName, 'utf8');
+				data = fs.readFileSync('./build/BMS/' + songDir + '/' + fileName, 'utf8');
 				lines = data.split(/\n/);
 				var song = songTemplate;
 
@@ -98,10 +98,10 @@ fs.readdir('./convertor/BMS', function(err, songDirs){
 					//Parse clipchart
 					if(lineChunk[0].match(/#WAV../) != null){
 						var oldName = lineChunk[1].trim();
-						var newName = lineChunk[1].trim().replace(/\+/g, "plus").replace(/#/g, "hash");
+						var newName = lineChunk[1].trim().replace(/\+/g, "plus").replace(/#/g, "hash").replace(/-/g, "ms");
 						song.clipchart[lineChunk[0].substring(4)] = newName;
 						//Copy notes
-						copyFileSync('./convertor/BMS/' + songDir + '/' + oldName, './convertor/BMSconverted/' + newName)
+						copyFileSync('./build/BMS/' + songDir + '/' + oldName, './build/BMSconverted/' + newName)
 						
 					}
 					//Parse notes
@@ -201,7 +201,7 @@ fs.readdir('./convertor/BMS', function(err, songDirs){
 					}
 				}
 				var newSongFileName = fileName.substring(0, fileName.length - 4) + '.json';
-				fs.writeFile('./convertor/BMSconverted/' + newSongFileName, JSON.stringify(song, null, '\t'), function(err){
+				fs.writeFile('./build/BMSconverted/' + newSongFileName, JSON.stringify(song, null, '\t'), function(err){
 					if (err) throw err;
 				});
 
