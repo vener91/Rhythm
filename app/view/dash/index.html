@@ -8,8 +8,8 @@
         <div class="ui-content">
             <img id="player-avatar" src="<%=user.pic %>" alt="user-pic" /><%=user.username %>
             <div id="player-stats">
-                <span>Level 6 Rookie</span>
-                <div id="level-up-bar" class="ui-progress-bar"><div></div></div>
+                <span>Level <%=user.level %> Rookie</span>
+                <div id="level-up-bar" class="ui-progress-bar" data-precent="<%=user.exp_precent %>"><div></div></div>
             </div>
         </div>
     </div>

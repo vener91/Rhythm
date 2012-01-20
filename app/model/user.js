@@ -27,14 +27,19 @@ module.exports = function(app){
     facebook_id: { type: String },
     join_date: { type: Date, default: Date.now },
     verified: { type: Boolean, default: false },
-    level: { type: Number, min: 0, max: 100 }, //Max level of 100
-    level_up_exp : { type: Number, min: 0 },
+    level: { type: Number, min: 0, max: 100, default: 1 }, //Max level of 100
+    level_up_exp : { type: Number, min: 0, default: 0 },
     sockets: [String],
     
   });
   UserSchema.statics.hashPassword = function(text){
-      return crpyto.createHash('sha1').update(text).digest('hex');
+    return crpyto.createHash('sha1').update(text).digest('hex');
   };
+  
+  UserSchema.statics.getExp = function(level){
+    return level * level * level; //Experince growth rate formula
+  };
+
   UserSchema.methods.notifyUser = function(user, type, message, callback){
     //Notifies uers
     var Notification = require(__dirname + '/notification')(app);
