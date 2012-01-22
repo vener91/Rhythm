@@ -1,4 +1,4 @@
-function rhythmGame(trackName, canvasObj, msgCanvasObj, isLoadedCallback) {  
+function rhythmGame(trackName, trackSpeed, canvasObj, msgCanvasObj, isLoadedCallback) {  
     //Stats Counters
     this.gameLoopCount = 0;
     this.comboCount = 0;
@@ -7,6 +7,11 @@ function rhythmGame(trackName, canvasObj, msgCanvasObj, isLoadedCallback) {
         renderkeys: false
         
     };
+    this.perfectCount = 0;
+    this.goodCount = 0;
+    this.badCount = 0;
+    this.missCount = 0;
+    this.pills = 0;
 
     this.loader = new PxLoader();
 
@@ -28,7 +33,7 @@ function rhythmGame(trackName, canvasObj, msgCanvasObj, isLoadedCallback) {
     this.skinImg = this.loader.addImage('/res/skin/rhythm/rhythm-skin.png');
 
     //Config
-    this.speed = 2.5;
+    this.speed = trackSpeed;
     this.gameCanvas = canvasObj;
     this.gameHeight = canvasObj.height;
     this.gameWidth = canvasObj.width;
@@ -61,14 +66,7 @@ function rhythmGame(trackName, canvasObj, msgCanvasObj, isLoadedCallback) {
             gameObj.filesToLoad += Object.keys(gameObj.track.clipchart).length;
             gameObj.clipLibrary = {}; //Clear library
             for(clipName in gameObj.track.clipchart){
-                //console.info(clipName, '/res/track/' + gameObj.trackName + '/' + gameObj.track.clipchart[clipName]);
                 gameObj.loader.addSound(clipName, '/res/track/' + gameObj.trackName + '/' + gameObj.track.clipchart[clipName]);
-                /*
-                this.skinImg = this.loader.addImage('/res/skin/rhythm/rhythm-skin.png');
-                gameObj.loadAudio(clipName, gameObj.track.clipchart[clipName], function(clipName, data){
-                   gameObj.clipLibrary[clipName] = data;
-                });
-                */
             }
 
             gameObj.loader.addCompletionListener(function() {
@@ -123,6 +121,12 @@ rhythmGame.prototype.loadGame = function() {
         this.barHeight = this.gameHeight * 4 * this.speed / 5;
         this.heightPerMilisec = this.track.bpm / 60 * this.barHeight / 4000;
         this.timePerBar = (this.track.bpm / 60) * 4000 * this.speed;
+        //Calcualate judgement distance
+        this.perfectJudgement = 0.3 * 10 * this.speed + 20 //10 is the height of the note piece
+        this.goodJudgement = 0.5 * 10 * this.speed + 20 //10 is the height of the note piece
+        this.badJudgement = 0.8 * 10 * this.speed + 20 //10 is the height of the note piece
+
+
         //Load song into memory;
         
         //Load keys
@@ -193,49 +197,70 @@ rhythmGame.prototype.loadGame = function() {
             w1:{
                 isPressed: false,
                 playSound: function(){
-                    soundManager.play(gameObj.keyStack.w1[0].clip);
+                    if(gameObj.keyStack.w1[0] != 'undefined'){
+                        soundManager.play(gameObj.keyStack.w1[0].clip);
+                        gameObj.hitKey('w1');
+                    }
                 },
                 keyObject: $(".w1")   
             },
             b1:{
                 isPressed: false,
                 playSound: function(){
-                    soundManager.play(gameObj.keyStack.b1[0].clip);
+                    if(gameObj.keyStack.b1[0] != 'undefined'){
+                        soundManager.play(gameObj.keyStack.b1[0].clip);
+                        gameObj.hitKey('b1');
+                    }
                 },
                 keyObject: $(".b1")
             },
             w2:{
                 isPressed: false,
                 playSound: function(){
-                    soundManager.play(gameObj.keyStack.w2[0].clip);
+                    if(gameObj.keyStack.w3[0] != 'undefined'){
+                        soundManager.play(gameObj.keyStack.w2[0].clip);
+                        gameObj.hitKey('w2');
+                    }
                 },
                 keyObject: $(".w2")
             },
             g:{
                 isPressed: false,
                 playSound: function(){
-                    soundManager.play(gameObj.keyStack.g[0].clip);
+                    if(gameObj.keyStack.g[0] != 'undefined'){
+                        soundManager.play(gameObj.keyStack.g[0].clip);
+                        gameObj.hitKey('g');
+                    }
                 },
                 keyObject: $(".g")
             },
             w3:{
                 isPressed: false,
                 playSound: function(){
-                    soundManager.play(gameObj.keyStack.w3[0].clip);
+                    if(gameObj.keyStack.w3[0] != 'undefined'){
+                        soundManager.play(gameObj.keyStack.w3[0].clip);
+                        gameObj.hitKey('w3');
+                    }
                 },
                 keyObject: $(".w3")
             },
             b2:{
                 isPressed: false,
                 playSound: function(){
-                    soundManager.play(gameObj.keyStack.b2[0].clip);
+                    if(gameObj.keyStack.b2[0] != 'undefined'){
+                        soundManager.play(gameObj.keyStack.b2[0].clip);
+                        gameObj.hitKey('b2');
+                    }
                 },
                 keyObject: $(".b2")
             },
             w4:{
                 isPressed: false,
                 playSound: function(){
-                    soundManager.play(gameObj.keyStack.w4[0].clip);
+                    if(gameObj.keyStack.w4[0] != 'undefined'){
+                        soundManager.play(gameObj.keyStack.w4[0].clip);
+                        gameObj.hitKey('w4');
+                    }
                 },
                 keyObject: $(".w4")
             },
@@ -308,6 +333,79 @@ rhythmGame.prototype.loadGame = function() {
         this.isLoadedCallback();
 };
 
+rhythmGame.prototype.hitKey = function(key){
+    //Judging Mechanism
+    var newTime = new Date().getTime();
+    var yPos = ((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack[key][0].y;
+    if( yPos < gameObj.gameHeight - gameObj.goodJudgement - 20){
+        return;
+    }else {
+        gameObj.keyStack[key][0].hit = true;
+        if( yPos > gameObj.gameHeight - gameObj.perfectJudgement - 20){
+            if( yPos > gameObj.gameHeight - 20 + gameObj.goodJudgement){
+                if( yPos > gameObj.gameHeight - 20 + gameObj.badJudgement){
+                    //Bad
+                    gameObj.keyBad();
+                }else{
+                    //Lower good
+                    gameObj.keyGood();
+                }
+            }else{
+                //Perfect
+                gameObj.keyPerfect();
+            }
+        }else{
+            //Upper good
+            gameObj.keyGood();
+        }
+    } 
+}
+
+rhythmGame.prototype.keyPerfect = function(){
+    this.perfectCount++;
+    this.hitMsg = {spriteXPos:0, spriteYPos:160, y:120};
+    this.comboScore++;
+    this.comboY = 0;
+    if(this.comboScore % 20 == 0){
+        $(".stats-pills").text(this.pills);
+        this.pills++;
+    }
+    $(".stats-cool").text(this.perfectCount);
+}
+
+rhythmGame.prototype.keyGood = function(){
+    this.goodCount++;
+    this.hitMsg = {spriteXPos:0, spriteYPos:100, y:120};
+    this.comboScore++;
+    this.comboY = 0;
+    if(this.comboScore % 20 == 0){
+        $(".stats-pills").text(this.pills);
+        this.pills++;
+    }
+    $(".stats-good").text(this.goodCount);
+}
+
+rhythmGame.prototype.keyBad = function(){
+    //Check for pills
+    if(this.pills != 0){
+        this.keyPerfect();
+        this.pills--;
+        $(".stats-pills").text(this.pills);
+        return;
+    }
+    this.badCount++;
+    gameObj.hitMsg = {spriteXPos:250, spriteYPos:160, y:120};
+    this.comboScore = 0;
+    $(".stats-bad").text(this.badCount);
+}
+
+rhythmGame.prototype.keyMiss = function(){
+    this.missCount++;
+    this.comboScore = 0;
+    this.hitMsg = {spriteXPos:250, spriteYPos:100, y:120};
+    $(".stats-miss").text(this.missCount);
+}
+
 rhythmGame.prototype.startGame = function() {  
     window.requestAnimationFrame(this.gameLoop); //Start Game
 };
@@ -342,28 +440,16 @@ rhythmGame.prototype.gameLoop = function(newTime){
     }
 
     //Remove old notes
-    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.w1[0].y > gameObj.gameHeight){
-        gameObj.keyStack.w1.shift();
+    for(key in gameObj.keyStack){
+        if(typeof(gameObj.keyStack[key][0]) != 'undefined'){
+            if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack[key][0].y > (gameObj.gameHeight + gameObj.badJudgement + 10)){
+                if(typeof(gameObj.keyStack[key][0].hit) == 'undefined'){
+                    gameObj.keyMiss();
+                }
+                gameObj.keyStack[key].shift();
+            }
+        }
     }
-    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.b1[0].y > gameObj.gameHeight){
-        gameObj.keyStack.b1.shift();
-    }
-    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.w2[0].y > gameObj.gameHeight){
-        gameObj.keyStack.w2.shift();
-    }
-    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.g[0].y > gameObj.gameHeight){
-        gameObj.keyStack.g.shift();
-    }
-    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.w3[0].y > gameObj.gameHeight){
-        gameObj.keyStack.w3.shift();
-    }
-    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.b2[0].y > gameObj.gameHeight){
-        gameObj.keyStack.b2.shift();
-    }
-    if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack.w4[0].y > gameObj.gameHeight){
-        gameObj.keyStack.w4.shift();
-    }
-    
     //breakprocess;
     //Render Msg
     //Render with gameObj.hitMsg = {spriteXPos:250, spriteYPos:160, y:120}
@@ -428,11 +514,10 @@ function animateLoader(){
 $(document).ready(function(){
 
     animateLoader();
-    $('.player-bg').setFluid(112, 1);
-    $('.player-canvas').setFluid(115, 1, function(height){
-        $('.player-canvas').get(0).height = height;
-    }).get(0).width = 350;
-    
+    $('.player-bg').height(500);
+    var playerCanvas = $('.player-canvas').get(0);
+    playerCanvas.height = 500;
+    playerCanvas.width = 350;
     var msgCanvas = $(".player-msg-canvas").get(0)
     msgCanvas.width = 350;
     msgCanvas.height = 200;
@@ -451,7 +536,8 @@ $(document).ready(function(){
     
     //Start prequesting assets
     var trackName = $("#track-title").text();
-    window.game = new rhythmGame(trackName, $('.player-canvas').get(0), msgCanvas, function(playerRef){
+    var trackSpeed = $("#track-speed").text();
+    window.game = new rhythmGame(trackName, trackSpeed,$('.player-canvas').get(0), msgCanvas, function(playerRef){
         $("#player-play-loading").hide();
         $("#player-load-info > div").animate({ paddingRight: 0, opacity: 0, marginLeft: -135}, 1000, function(){
             $(this).remove();

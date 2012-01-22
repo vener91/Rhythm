@@ -1,5 +1,5 @@
 module.exports = function(app){
-    app.get('/player/play/:track', app.passport.isLoggedIn, function(req, res){
+    app.get('/player/play/:track/:speed', app.passport.isLoggedIn, function(req, res){
         res.render('player', {
 	        layout: 'page-layout',
             scripts: ['player', 'webgl-2d'],
@@ -7,7 +7,8 @@ module.exports = function(app){
             title: app.title + ' - Player',
             user: req.user,
             track: {
-                title: req.params.track
+                title: req.params.track,
+                speed: req.params.speed
             }
         });
     });

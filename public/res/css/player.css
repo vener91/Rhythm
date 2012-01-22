@@ -15,6 +15,21 @@
     }
 }
 
+@-moz-keyframes player-pulse {
+    0% {
+       opacity: 0.8;
+        bottom: 10px;
+    }
+    50% {
+       opacity: 0.6;
+        bottom: 8px;
+    }
+    100% {
+       opacity: 0.8;
+        bottom: 10px;
+    }
+}
+
 #player-load{
     background-image: url("../img/system/bg.png");
     height:100%;
@@ -115,6 +130,10 @@
     -webkit-animation-duration: 0.3s;
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-timing-function: ease-in-out;
+    -moz-animation-name: player-pulse;
+    -moz-animation-duration: 0.3s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: ease-in-out;
     z-index: -1;
 }
 
