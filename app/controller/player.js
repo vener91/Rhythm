@@ -12,6 +12,21 @@ module.exports = function(app){
             }
         });
     });
+
+    app.get("/player/spectate/:gameid", app.passport.isLoggedIn, function(req, res){
+       res.render('player', {
+            layout: 'page-layout',
+            scripts: ['player', 'webgl-2d', 'spectate'],
+            styles: ['player'],
+            title: app.title + ' - Spectator',
+            user: req.user,
+            track: {
+                title: req.params.track,
+                speed: req.params.speed
+            }
+        }); 
+    });
+    
     app.get("/player/getURI", function(req, res){
         request = require("request");
         BufferList = require("bufferlist").BufferList;

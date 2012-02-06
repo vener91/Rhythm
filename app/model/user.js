@@ -30,7 +30,7 @@ module.exports = function(app){
     level: { type: Number, min: 0, max: 100, default: 1 }, //Max level of 100
     level_up_exp : { type: Number, min: 0, default: 0 },
     sockets: [String],
-    
+    recently_played: [String]
   });
   UserSchema.statics.hashPassword = function(text){
     return crpyto.createHash('sha1').update(text).digest('hex');

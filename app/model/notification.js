@@ -14,6 +14,5 @@ module.exports = function(app){
     owner: { type: Schema.ObjectId }
   });
   var notificationModel = app.mg.model('notification', NotificationSchema);
-  var crpyto = require('crypto');
   return notificationModel;
 }

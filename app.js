@@ -27,7 +27,11 @@ app.error(function(err, req, res){
     app.fatalError(res, err);
 });
 app.fatalError = function(res, err){
-    if(typeof(err) == undefined || err == null){
+    if(typeof(res) == 'undefined' || res == null){
+        console.log(err);
+        return;
+    }
+    if(typeof(err) == 'undefined' || err == null){
         err = {};
     }else{
         console.log(err);
@@ -53,6 +57,12 @@ app.configure(function(){
         secret: config.cookieSecret,
         store: app.mongoStore
     }));
+
+    //Root
+    app.root = __dirname;
+
+    //File system
+    app.fs = fs;
 
     //Socket.io
     app.io = io;

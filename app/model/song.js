@@ -1,18 +1,21 @@
 /*
- * Notification Model
+ * Song Model
  *
  */
 module.exports = function(app){
   var Schema = app.mg.Schema
   , ObjectId = Schema.ObjectId;
 
-  var NotificationSchema = new Schema({
+  var SongSchema = new Schema({
     title: { type: String },
-    genre: {type: String, enum: ['Piano', 'followed', 'msg'] },
+    author: { type: String },
+    level: {type: Number, min: 1, },
+    bpm: {type: Number, min: 0, },
+    genre: {type: String, enum: ['Piano', 'Classical', 'msg'] },
     tags: [String],
-    path_name: { type: String }
+    path_name: { type: String },
+    play_count: {type: Number, min: 0,}
   });
-  var notificationModel = app.mg.model('notification', NotificationSchema);
-  var crpyto = require('crypto');
-  return notificationModel;
+  var songModel = app.mg.model('song', SongSchema);
+  return songModel;
 }
