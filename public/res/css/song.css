@@ -27,3 +27,41 @@ input#song-search {
 input#song-search:focus {
     outline: none;
 }
+
+.ui-song-list > div{
+	margin: 10px;
+	border: 1px solid white;
+	padding: 6px;
+	height: 100px;
+}
+
+.ui-song-list > div:hover {
+	background-color: #111;
+}
+
+.ui-song-list > div > .actions {
+	float: right;
+	font-size: 21px;
+	display: block;
+	padding: 4px;
+}
+
+.ui-song-list > div a{
+	color: #999;
+	text-decoration: none;
+}
+
+.ui-song-list > div a:hover{
+	cursor: pointer;
+	color: #fff;
+}
+
+.ui-song-list > div > img{
+	width: 100px;
+	float: left;
+}
+
+.ui-song-list > div > table{
+	color: #999;
+	margin-left: 110px;
+}

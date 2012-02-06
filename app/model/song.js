@@ -18,7 +18,7 @@ module.exports = function(app){
     path_name: { type: String },
     play_count: {type: Number, min: 0,}
   });
-  UserSchema.plugin(useTimestamps);
+  SongSchema.plugin(useTimestamps);
   var songModel = app.mg.model('song', SongSchema);
   return songModel;
 

@@ -54,13 +54,17 @@ module.exports = function(app){
 
     //Import required models
     app.get('/song', app.passport.isLoggedIn, function(req, res){
-        res.render('song', {
-            layout: 'page-layout',
-            scripts: [],
-            styles: ['song'],
-            title: app.title + ' - Songs',
-            user: req.user,
-            
+        var Song = app.mg.model('song');
+        Song.find().sort('updatedAt', 'descending').limit(10).execFind(function (err, songs) {
+            if(err) app.fatalError(res, err);
+            res.render('song', {
+                layout: 'page-layout',
+                scripts: [],
+                styles: ['song'],
+                title: app.title + ' - Songs',
+                user: req.user,
+                songs: songs 
+            });
         });
     });
 

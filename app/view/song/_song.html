@@ -1,0 +1,12 @@
+<div data-name="<%=song.path_name %>">
+	<img src="/res/track/<%=song.path_name %>/album.jpg" alt="album-pic"/>
+	<table>
+		<tr>
+			<td><%=song.title %> by <%=song.author %>
+		<tr>
+			<td><%=song.genre %>
+		<tr>
+			<td><%=song.bpm %> BPM
+	</table>
+	<div class="actions"><a>Add to playlist</a> | <a href="/player/play/<%=song.path_name %>/2.5">Play</a></div>
+</div>
