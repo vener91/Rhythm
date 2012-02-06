@@ -5,6 +5,8 @@
 module.exports = function(app){
   var Schema = app.mg.Schema
   , ObjectId = Schema.ObjectId;
+  var mongooseTypes = require("mongoose-types")
+  , useTimestamps = mongooseTypes.useTimestamps;
 
   var SongSchema = new Schema({
     title: { type: String },
@@ -16,6 +18,8 @@ module.exports = function(app){
     path_name: { type: String },
     play_count: {type: Number, min: 0,}
   });
+  UserSchema.plugin(useTimestamps);
   var songModel = app.mg.model('song', SongSchema);
   return songModel;
+
 }

@@ -11,6 +11,7 @@ module.exports = function(app){
                     app.fatalError(null, err);
                 }else{
                     if(song){ //Have song already
+                        /*
                         //Update song
                         song.title = data.title;
                         song.author = data.author;
@@ -18,13 +19,13 @@ module.exports = function(app){
                         song.bpm = data.bpm;
                         song.genre = data.genre;
                         song.tags = data.tags;
-                        song.path_name = songName;
                         //Update song data
                         Song.update({ path_name: songName }, song, function(err){
                             if(err){
                                 app.fatalError(null, err);
                             }
                         });
+                        */
                     }else{
                         //New song
                         var song = new Song();
@@ -44,9 +45,6 @@ module.exports = function(app){
                 }
             });
         }
-        //Wipe song database
-        //I have no idea how to do this yet
-
         for(var i = 0; i < songDirs.length; i++){
             //Reads track.json
             data = JSON.parse(app.fs.readFileSync( app.root + '/public/res/track/' + songDirs[i] + '/track.json', 'utf8'));

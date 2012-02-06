@@ -5,6 +5,8 @@
 module.exports = function(app){
   var Schema = app.mg.Schema
   , ObjectId = Schema.ObjectId;
+  var mongooseTypes = require("mongoose-types")
+  , useTimestamps = mongooseTypes.useTimestamps;
 
   var UserSchema = new Schema({
     username: { type: String, validate: [function(v){
@@ -32,6 +34,7 @@ module.exports = function(app){
     sockets: [String],
     recently_played: [String]
   });
+  UserSchema.plugin(useTimestamps);
   UserSchema.statics.hashPassword = function(text){
     return crpyto.createHash('sha1').update(text).digest('hex');
   };
