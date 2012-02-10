@@ -2,7 +2,7 @@ module.exports = function(app){
     app.get('/player/play/:track/:speed', app.passport.isLoggedIn, function(req, res){
         res.render('player', {
 	        layout: 'page-layout',
-            scripts: ['player', 'webgl-2d'],
+            scripts: ['player', 'webgl-2d', 'three'],
             styles: ['player'],
             title: app.title + ' - Player',
             user: req.user,

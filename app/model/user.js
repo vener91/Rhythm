@@ -36,7 +36,7 @@ module.exports = function(app){
   });
   UserSchema.plugin(useTimestamps);
   UserSchema.statics.hashPassword = function(text){
-    return crpyto.createHash('sha1').update(text).digest('hex');
+    return crypto.createHash('sha1').update(text).digest('hex');
   };
   
   UserSchema.statics.getExp = function(level){
@@ -59,6 +59,6 @@ module.exports = function(app){
     });
   };
   app.mg.model('user', UserSchema);
-  var crpyto = require('crypto');
+  var crypto = require('crypto');
   return app.mg;
 }
