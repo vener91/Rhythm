@@ -1,3 +1,13 @@
+/* Fonts */
+@media screen {
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 100;
+  src: local('Raleway-Thin'), url('/res/fonts/raleway.woff') format('woff');
+}
+}
+
 /* Global CSS */
 *{
     margin: 0px;
@@ -16,8 +26,9 @@ body{
 }
 
 h1{
+    font-family: 'Raleway';
     font-weight: normal;
-    font-size: 39px;
+    font-size: 55px;
 }
 
 h2{

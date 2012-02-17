@@ -1,4 +1,6 @@
 function rhythmGame(trackName, trackSpeed, canvasObj, msgCanvasObj, isLoadedCallback) {  
+    //Constants
+    this.scoreBar = 100;
     //Stats Counters
     this.gameLoopCount = 0;
     this.comboCount = 0;
@@ -34,6 +36,7 @@ function rhythmGame(trackName, trackSpeed, canvasObj, msgCanvasObj, isLoadedCall
 
     //Config
     this.speed = trackSpeed;
+    this.gameWarp = $(".player-wrap");
     this.gameCanvas = canvasObj;
     this.gameHeight = canvasObj.height;
     this.gameWidth = canvasObj.width;
@@ -52,10 +55,7 @@ function rhythmGame(trackName, trackSpeed, canvasObj, msgCanvasObj, isLoadedCall
     soundManager.flashVersion = 9; // optional: shiny features (default = 8)
     soundManager.useFlashBlock = false; // optionally, enable when you're ready to dive in
     soundManager.preferFlash = true;
-    /*
-     * read up on HTML5 audio support, if you're feeling adventurous.
-     * iPad/iPhone and devices without flash installed will always attempt to use it.
-    */
+
     var gameObj = this;
     soundManager.onready(function() {
         //Load Song
@@ -83,14 +83,14 @@ rhythmGame.prototype.isResLoaded = function(callback){
         //Done loading resources, load game now
         this.loadGame();
     } 
-}
+};
 
 rhythmGame.prototype.loadImage = function(uri){
     var img = new Image();
     img.onload = this.isResLoaded();
     img.src = uri;
     return img;
-}
+};
 
 rhythmGame.prototype.loadAudio = function(clipName, fileName, callback){
     var gameObj = this;
@@ -98,14 +98,14 @@ rhythmGame.prototype.loadAudio = function(clipName, fileName, callback){
         callback(clipName, data);
         gameObj.isResLoaded();
     },"text");
-}
+};
 
 rhythmGame.prototype.getAudio = function(clipName){
     var clip = new Audio();
     clip.src = this.clipLibrary[clipName];
     clip.preload = 'auto';
     return clip;
-}
+};
 
 rhythmGame.prototype.loadGame = function() {
 
@@ -122,15 +122,15 @@ rhythmGame.prototype.loadGame = function() {
         this.heightPerMilisec = this.track.bpm / 60 * this.barHeight / 4000;
         this.timePerBar = (this.track.bpm / 60) * 4000 * this.speed;
         //Calcualate judgement distance
-        this.perfectJudgement = 0.3 * 10 * this.speed + 20 //10 is the height of the note piece
-        this.goodJudgement = 0.5 * 10 * this.speed + 20 //10 is the height of the note piece
-        this.badJudgement = 0.8 * 10 * this.speed + 20 //10 is the height of the note piece
+        this.perfectJudgement = 0.3 * 10 * this.speed + 20; //10 is the height of the note piece
+        this.goodJudgement = 0.5 * 10 * this.speed + 20; //10 is the height of the note piece
+        this.badJudgement = 0.8 * 10 * this.speed + 20; //10 is the height of the note piece
 
 
         //Load song into memory;
         
         //Load keys
-        this.keyStack = {} //Clear stack
+        this.keyStack = {}; //Clear stack
         this.keyStack.w1 = [];
         this.keyStack.b1 = [];
         this.keyStack.w2 = [];
@@ -158,31 +158,31 @@ rhythmGame.prototype.loadGame = function() {
                 var currRow = currBar[j];
                 
                 if(currRow != null && Object.keys(currRow).length != 0){
-                    if(typeof(currRow.w1) != 'undefined'){
+                    if(typeof(currRow.w1) !== 'undefined'){
                         this.keyStack.w1.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w1 });
                         barChartCtx.drawImage(this.skinImg, 0, 90, 50, 10, 0, Math.round(this.barHeight - (j * distancePerStep) - 10), 50, 10);    
                     }
-                    if(typeof(currRow.b1) != 'undefined'){
+                    if(typeof(currRow.b1) !== 'undefined'){
                         this.keyStack.b1.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.b1 });
                         barChartCtx.drawImage(this.skinImg, 50, 90, 40, 10, 51, Math.round(this.barHeight - (j * distancePerStep) - 10), 40, 10);    
                     }
-                    if(typeof(currRow.w2) != 'undefined'){
+                    if(typeof(currRow.w2) !== 'undefined'){
                         this.keyStack.w2.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w2 });
                         barChartCtx.drawImage(this.skinImg, 0, 90, 50, 10, 92, Math.round(this.barHeight - (j * distancePerStep) - 10), 50, 10);
                     }
-                    if(typeof(currRow.g) != 'undefined'){
+                    if(typeof(currRow.g) !== 'undefined'){
                         this.keyStack.g.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.g }); 
                         barChartCtx.drawImage(this.skinImg, 91, 90, 64, 10, 143, Math.round(this.barHeight - (j * distancePerStep) - 10), 64, 10);    
                     }
-                    if(typeof(currRow.w3) != 'undefined'){
+                    if(typeof(currRow.w3) !== 'undefined'){
                         this.keyStack.w3.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w3 }); 
                         barChartCtx.drawImage(this.skinImg, 0, 90, 50, 10, 208, Math.round(this.barHeight - (j * distancePerStep) - 10), 50, 10);
                     }
-                    if(typeof(currRow.b2) != 'undefined'){
+                    if(typeof(currRow.b2) !== 'undefined'){
                         this.keyStack.b2.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.b2 }); 
                         barChartCtx.drawImage(this.skinImg, 50, 90, 40, 10, 259, Math.round(this.barHeight - (j * distancePerStep) - 10), 40, 10);    
                     }
-                    if(typeof(currRow.w4) != 'undefined'){
+                    if(typeof(currRow.w4) !== 'undefined'){
                         this.keyStack.w4.push({y:-1 * ((i) * this.barHeight) - (j * distancePerStep) - 10, clip: currRow.w4 }); 
                         barChartCtx.drawImage(this.skinImg, 0, 90, 50, 10, 300, Math.round(this.barHeight - (j * distancePerStep) - 10), 50, 10);
                     }
@@ -197,7 +197,7 @@ rhythmGame.prototype.loadGame = function() {
             w1:{
                 isPressed: false,
                 playSound: function(){
-                    if(gameObj.keyStack.w1[0] != 'undefined'){
+                    if(gameObj.keyStack.w1[0] !== 'undefined'){
                         soundManager.play(gameObj.keyStack.w1[0].clip);
                         gameObj.hitKey('w1');
                     }
@@ -207,7 +207,7 @@ rhythmGame.prototype.loadGame = function() {
             b1:{
                 isPressed: false,
                 playSound: function(){
-                    if(gameObj.keyStack.b1[0] != 'undefined'){
+                    if(gameObj.keyStack.b1[0] !== 'undefined'){
                         soundManager.play(gameObj.keyStack.b1[0].clip);
                         gameObj.hitKey('b1');
                     }
@@ -217,7 +217,7 @@ rhythmGame.prototype.loadGame = function() {
             w2:{
                 isPressed: false,
                 playSound: function(){
-                    if(gameObj.keyStack.w3[0] != 'undefined'){
+                    if(gameObj.keyStack.w3[0] !== 'undefined'){
                         soundManager.play(gameObj.keyStack.w2[0].clip);
                         gameObj.hitKey('w2');
                     }
@@ -227,7 +227,7 @@ rhythmGame.prototype.loadGame = function() {
             g:{
                 isPressed: false,
                 playSound: function(){
-                    if(gameObj.keyStack.g[0] != 'undefined'){
+                    if(gameObj.keyStack.g[0] !== 'undefined'){
                         soundManager.play(gameObj.keyStack.g[0].clip);
                         gameObj.hitKey('g');
                     }
@@ -237,7 +237,7 @@ rhythmGame.prototype.loadGame = function() {
             w3:{
                 isPressed: false,
                 playSound: function(){
-                    if(gameObj.keyStack.w3[0] != 'undefined'){
+                    if(gameObj.keyStack.w3[0] !== 'undefined'){
                         soundManager.play(gameObj.keyStack.w3[0].clip);
                         gameObj.hitKey('w3');
                     }
@@ -247,7 +247,7 @@ rhythmGame.prototype.loadGame = function() {
             b2:{
                 isPressed: false,
                 playSound: function(){
-                    if(gameObj.keyStack.b2[0] != 'undefined'){
+                    if(gameObj.keyStack.b2[0] !== 'undefined'){
                         soundManager.play(gameObj.keyStack.b2[0].clip);
                         gameObj.hitKey('b2');
                     }
@@ -257,13 +257,13 @@ rhythmGame.prototype.loadGame = function() {
             w4:{
                 isPressed: false,
                 playSound: function(){
-                    if(gameObj.keyStack.w4[0] != 'undefined'){
+                    if(gameObj.keyStack.w4[0] !== 'undefined'){
                         soundManager.play(gameObj.keyStack.w4[0].clip);
                         gameObj.hitKey('w4');
                     }
                 },
                 keyObject: $(".w4")
-            },
+            }
         };
         $(document).on('keydown', function(e){
             var currKeyIndex = null;
@@ -290,13 +290,10 @@ rhythmGame.prototype.loadGame = function() {
                 currKeyIndex = 'w4';
                 break;
             }
-            if(currKeyIndex != null){
-                if(keyboardState[currKeyIndex].isPressed != true){
-                    keyboardState[currKeyIndex].keyObject.addClass("pressed");
-                    keyboardState[currKeyIndex].playSound();
-                    keyboardState[currKeyIndex].isPressed = true;
-                }else{
-                }
+            if(currKeyIndex != null && keyboardState[currKeyIndex].isPressed != true){
+                keyboardState[currKeyIndex].keyObject.addClass("pressed");
+                keyboardState[currKeyIndex].playSound();
+                keyboardState[currKeyIndex].isPressed = true;
             }
         }).on('keyup', function(e){
             var currKeyIndex = null;
@@ -359,11 +356,21 @@ rhythmGame.prototype.hitKey = function(key){
             gameObj.keyGood();
         }
     } 
-}
+};
+
+rhythmGame.prototype.updateGlow = function(){
+    var stage = Math.floor(this.scoreBar / 10);
+    this.gameWarp.css("-webkit-animation-name", "glow-" + stage);
+};
 
 rhythmGame.prototype.keyPerfect = function(){
     this.perfectCount++;
     this.hitMsg = {spriteXPos:0, spriteYPos:160, y:120};
+    if(this.scoreBar > 96){
+        this.scoreBar = 97;    
+    }
+    this.scoreBar += 2;
+    this.updateGlow();
     this.comboScore++;
     this.comboY = 0;
     if(this.comboScore % 20 == 0){
@@ -371,11 +378,16 @@ rhythmGame.prototype.keyPerfect = function(){
         this.pills++;
     }
     $(".stats-cool").text(this.perfectCount);
-}
+};
 
 rhythmGame.prototype.keyGood = function(){
     this.goodCount++;
     this.hitMsg = {spriteXPos:0, spriteYPos:100, y:120};
+    if(this.scoreBar > 100){
+        this.scoreBar = 99;    
+    }
+    this.scoreBar++;
+    this.updateGlow();
     this.comboScore++;
     this.comboY = 0;
     if(this.comboScore % 20 == 0){
@@ -383,7 +395,7 @@ rhythmGame.prototype.keyGood = function(){
         this.pills++;
     }
     $(".stats-good").text(this.goodCount);
-}
+};
 
 rhythmGame.prototype.keyBad = function(){
     //Check for pills
@@ -394,17 +406,27 @@ rhythmGame.prototype.keyBad = function(){
         return;
     }
     this.badCount++;
+    if(this.scoreBar < 0){
+        this.scoreBar = 1;    
+    }
+    this.scoreBar--;
+    this.updateGlow();
     gameObj.hitMsg = {spriteXPos:250, spriteYPos:160, y:120};
     this.comboScore = 0;
     $(".stats-bad").text(this.badCount);
-}
+};
 
 rhythmGame.prototype.keyMiss = function(){
     this.missCount++;
+    if(this.scoreBar < 1){
+        this.scoreBar = 2;    
+    }
+    this.scoreBar -= 2;
+    this.updateGlow();
     this.comboScore = 0;
     this.hitMsg = {spriteXPos:250, spriteYPos:100, y:120};
     $(".stats-miss").text(this.missCount);
-}
+};
 
 rhythmGame.prototype.startGame = function() {  
     window.requestAnimationFrame(this.gameLoop); //Start Game
@@ -424,7 +446,7 @@ rhythmGame.prototype.gameLoop = function(newTime){
     //game.gameCanvasCtx.drawImage(game.noteCharts[3],0,0)
     var chartLength = gameObj.noteCharts.length;
     for(var i = 0; i < chartLength; i++){
-        if(!(typeof(gameObj.noteCharts[i]) === "undefined")){
+        if(typeof(gameObj.noteCharts[i] !== "undefined")){
             var yPos = ((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) - ((i + 1) * gameObj.barHeight);
             if(yPos < gameObj.gameHeight){
                 if(yPos > -1 * gameObj.barHeight){
@@ -441,9 +463,9 @@ rhythmGame.prototype.gameLoop = function(newTime){
 
     //Remove old notes
     for(key in gameObj.keyStack){
-        if(typeof(gameObj.keyStack[key][0]) != 'undefined'){
+        if(typeof(gameObj.keyStack[key][0]) !== 'undefined'){
             if(((newTime - gameObj.startGameTime) * gameObj.heightPerMilisec) + gameObj.keyStack[key][0].y > (gameObj.gameHeight + gameObj.badJudgement + 10)){
-                if(typeof(gameObj.keyStack[key][0].hit) == 'undefined'){
+                if(typeof(gameObj.keyStack[key][0].hit) === 'undefined'){
                     gameObj.keyMiss();
                 }
                 gameObj.keyStack[key].shift();
@@ -497,7 +519,7 @@ rhythmGame.prototype.gameLoop = function(newTime){
         gameObj.keyStack.w4.length > 0) {
         window.requestAnimationFrame(gameObj.gameLoop); //Start Game    
     }
-}
+};
 
 function animateLoader(){
     if($("#player-play-loading").is(":visible")){
@@ -510,6 +532,7 @@ function animateLoader(){
         $("#player-play-loading").remove();
     }
 }
+
 
 $(document).ready(function(){
 

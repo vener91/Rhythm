@@ -7,47 +7,64 @@
     <div id="player-play-btn" class="hidden">Play Song</div>
     <div id="player-play-loading"><div></div></div>
 </div>
-<div class="player-wrap hidden">
-    <div class="player-bg">
-        <canvas class="player-canvas"></canvas>
-        <canvas class="player-msg-canvas"></canvas>
+<div class="game-wrap">
+    <div class="stats-wrap">
+        <div class="player-stats">
+            <table>
+                <tr>
+                    <td class="stats-framerate"></td>
+                </tr>
+                <tr>
+                    <td class="stats-cool"></td>
+                </tr>
+                <tr>
+                    <td class="stats-good"></td>
+                </tr>
+                <tr>
+                    <td class="stats-bad"></td>
+                </tr>
+                <tr>
+                    <td class="stats-miss"></td>
+                </tr>
+                <tr>
+                    <td class="stats-pills"></td>
+                </tr>
+            </table>
+        </div>
     </div>
-    <div class="player-target"> </div>
-    <div class="player-keys">
-        <div class="w1 key-white-left" > </div>
-        <div class="w2 key-white-right" > </div>
-        <div class="b1 key-blue" > </div>
-        <div class="g key-gold" > </div>
-        <div class="w3 key-white-left"> </div>
-        <div class="w4 key-white-right"> </div>
-        <div class="b2 key-blue"> </div>
+    <div class="player-wrap hidden">
+        <div class="player-bg">
+            <canvas class="player-canvas"></canvas>
+            <canvas class="player-msg-canvas"></canvas>
+        </div>
+        <div class="player-target"> </div>
+        <div class="player-keys">
+            <div class="w1 key-white-left" > </div>
+            <div class="w2 key-white-right" > </div>
+            <div class="b1 key-blue" > </div>
+            <div class="g key-gold" > </div>
+            <div class="w3 key-white-left"> </div>
+            <div class="w4 key-white-right"> </div>
+            <div class="b2 key-blue"> </div>
+        </div>
     </div>
 </div>
-<div class="player-stats">
+<div id="player-end">
+    <h1>Summary</h1>
     <table>
-        <tr>
-            <td>Frame Rate</td>
-            <td class="stats-framerate"></td>
-        </tr>
-        <tr>
-            <td>Cool</td>
-            <td class="stats-cool"></td>
-        </tr>
-        <tr>
-            <td>Good</td>
-            <td class="stats-good"></td>
-        </tr>
-        <tr>
-            <td>Bad</td>
-            <td class="stats-bad"></td>
-        </tr>
-        <tr>
-            <td>Miss</td>
-            <td class="stats-miss"></td>
-        </tr>
-        <tr>
-            <td>Pills</td>
-            <td class="stats-pills"></td>
-        </tr>
-    </table>
+        <tbody>
+            <tr class="perfect-count">
+                <td>Perfect</td>
+                <td></td>
+            <tr class="good-count">
+                <td>Good</td>
+                <td></td>
+            <tr class="bad-count">
+                <td>Bad</td>
+                <td></td>
+            <tr class="miss-count">
+                <td>Miss</td>
+                <td></td>
+        </tbody>
+    </table>    
 </div>

@@ -33,6 +33,7 @@
     }
 
     $.setBGM = function(name){
+        soundManager.url = '/res/swf';
         bgm = new Audio('/res/bgm/' + name + '.mp3'); 
         bgm.addEventListener('ended', function() {
             this.currentTime = 0;

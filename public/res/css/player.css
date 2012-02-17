@@ -30,12 +30,25 @@
     }
 }
 
+#player-end{
+    background-image: url("../img/system/bg.png");
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    padding: 80px;
+}
+
+#player-end h1{
+    display: none;
+}
+
 #player-load{
     background-image: url("../img/system/bg.png");
-    height:100%;
-    width:100%;
-    position:fixed;
-    z-index:1;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
 }
 
 #player-load-info{
@@ -88,12 +101,37 @@
     margin: 0 auto;
 }
 
+.game-wrap {
+    width: 50%;
+    padding-right: 0px;
+    height: 500px;
+    position: relative;
+    right: 50px;
+    top: 20px;
+}
+
+.stats-wrap{
+    float: right;
+    width: 50px;
+}
+
+.player-wrap {
+    float: right;  
+    -webkit-animation-name: glow-9;
+    -webkit-animation-duration: 0.6s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease-in-out;
+    -moz-animation-name: glow-pulse;
+    -moz-animation-duration: 0.6s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: ease-in-out;
+}
+
 .player-bg{
     width: 350px;
     margin-left: auto;
     margin-right: auto;
     background-color: black;
-    box-shadow: 0px 0px 50px #444;
     z-index: -2;
     position: relative;
 }
@@ -104,11 +142,6 @@
     z-index: 20;
 }
 
-.player-stats{
-    position: fixed;
-    left: 0px;
-    bottom: 0px;   
-}
 
 .player-msg-canvas{
     height: 200px;
