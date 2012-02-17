@@ -1,6 +1,6 @@
 function rhythmGame(trackName, trackSpeed, canvasObj, msgCanvasObj, isLoadedCallback) {  
     //Constants
-    this.scoreBar = 100;
+    this.scoreBar = 300;
     //Stats Counters
     this.gameLoopCount = 0;
     this.comboCount = 0;
@@ -35,8 +35,9 @@ function rhythmGame(trackName, trackSpeed, canvasObj, msgCanvasObj, isLoadedCall
     this.skinImg = this.loader.addImage('/res/skin/rhythm/rhythm-skin.png');
 
     //Config
+    this.end = false;
     this.speed = trackSpeed;
-    this.gameWarp = $(".player-wrap");
+    this.scoreBarObj = $(".score-bar");
     this.gameCanvas = canvasObj;
     this.gameHeight = canvasObj.height;
     this.gameWidth = canvasObj.width;
@@ -358,19 +359,23 @@ rhythmGame.prototype.hitKey = function(key){
     } 
 };
 
-rhythmGame.prototype.updateGlow = function(){
-    var stage = Math.floor(this.scoreBar / 10);
-    this.gameWarp.css("-webkit-animation-name", "glow-" + stage);
+rhythmGame.prototype.updateScoreBar = function(){
+    var stage = this.scoreBar;
+    this.scoreBarObj.css({
+        "background-position-y": -1 * (300 - stage),
+        "height": stage,
+    })
+    //this.gameWarp.css("-webkit-animation-name", "glow-" + stage);
 };
 
 rhythmGame.prototype.keyPerfect = function(){
     this.perfectCount++;
     this.hitMsg = {spriteXPos:0, spriteYPos:160, y:120};
-    if(this.scoreBar > 96){
-        this.scoreBar = 97;    
+    if(this.scoreBar > 297){
+        this.scoreBar = 297;    
     }
     this.scoreBar += 2;
-    this.updateGlow();
+    this.updateScoreBar();
     this.comboScore++;
     this.comboY = 0;
     if(this.comboScore % 20 == 0){
@@ -383,11 +388,11 @@ rhythmGame.prototype.keyPerfect = function(){
 rhythmGame.prototype.keyGood = function(){
     this.goodCount++;
     this.hitMsg = {spriteXPos:0, spriteYPos:100, y:120};
-    if(this.scoreBar > 100){
-        this.scoreBar = 99;    
+    if(this.scoreBar > 298){
+        this.scoreBar = 298;    
     }
     this.scoreBar++;
-    this.updateGlow();
+    this.updateScoreBar();
     this.comboScore++;
     this.comboY = 0;
     if(this.comboScore % 20 == 0){
@@ -407,10 +412,10 @@ rhythmGame.prototype.keyBad = function(){
     }
     this.badCount++;
     if(this.scoreBar < 0){
-        this.scoreBar = 1;    
+        this.endGame();
     }
-    this.scoreBar--;
-    this.updateGlow();
+    this.scoreBar -=2;
+    this.updateScoreBar();
     gameObj.hitMsg = {spriteXPos:250, spriteYPos:160, y:120};
     this.comboScore = 0;
     $(".stats-bad").text(this.badCount);
@@ -418,15 +423,44 @@ rhythmGame.prototype.keyBad = function(){
 
 rhythmGame.prototype.keyMiss = function(){
     this.missCount++;
-    if(this.scoreBar < 1){
-        this.scoreBar = 2;    
+    if(this.scoreBar < 0){
+        this.endGame();
     }
-    this.scoreBar -= 2;
-    this.updateGlow();
+    this.scoreBar -= 4;
+    this.updateScoreBar();
     this.comboScore = 0;
     this.hitMsg = {spriteXPos:250, spriteYPos:100, y:120};
     $(".stats-miss").text(this.missCount);
 };
+
+rhythmGame.prototype.endGame = function(){
+    this.end = true;
+    var gameObj = this;
+    $('.game-wrap').hide(500, function(){
+        $('#player-end').show(500, function(){
+            //Check if there is still keys
+            if(this.scoreBar < 0){
+                //Lost
+
+            } else {
+                //Complete
+            }
+            //Begin animation
+            $('#player-end > h1').show('clip', 1000, function(){
+                $('#player-end > table').show('clip', 1000, function(){
+                    $(this).find(".perfect-count > td:eq(1)").countUp(gameObj.perfectCount, 1000);
+                    $(this).find(".good-count > td:eq(1)").countUp(gameObj.goodCount, 1000);
+                    $(this).find(".bad-count > td:eq(1)").countUp(gameObj.badCount, 1000);
+                    $(this).find(".miss-count > td:eq(1)").countUp(gameObj.missCount, 1000);
+
+                    $('#player-end > .button-bar').show('clip', 1000, function(){
+                            
+                    });
+                });    
+            });
+        });
+    });
+}
 
 rhythmGame.prototype.startGame = function() {  
     window.requestAnimationFrame(this.gameLoop); //Start Game
@@ -510,14 +544,16 @@ rhythmGame.prototype.gameLoop = function(newTime){
 
     gameObj.lastUpdateTime = newTime;
     gameObj.gameLoopCount++;
-    if( gameObj.keyStack.w1.length > 0 || 
+    if( (gameObj.keyStack.w1.length > 0 || 
         gameObj.keyStack.b1.length > 0 || 
         gameObj.keyStack.w2.length > 0 || 
         gameObj.keyStack.g.length > 0 || 
         gameObj.keyStack.w3.length > 0 || 
         gameObj.keyStack.b2.length > 0|| 
-        gameObj.keyStack.w4.length > 0) {
+        gameObj.keyStack.w4.length > 0) && !gameObj.end) {
         window.requestAnimationFrame(gameObj.gameLoop); //Start Game    
+    } else {
+        gameObj.endGame();  
     }
 };
 
@@ -532,7 +568,6 @@ function animateLoader(){
         $("#player-play-loading").remove();
     }
 }
-
 
 $(document).ready(function(){
 

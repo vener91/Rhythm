@@ -31,18 +31,35 @@
 }
 
 #player-end{
-    background-image: url("../img/system/bg.png");
     height: 100%;
     width: 100%;
     position: fixed;
     z-index: 1;
     padding: 80px;
+    display: none;
 }
 
 #player-end h1{
     display: none;
 }
 
+#player-end table{
+    display: none;
+    font-size: 30px;
+    margin: 40px 0px 0px 100px;
+    text-align: right;
+    color: #777;
+}
+
+#player-end table td:nth-child(2) {
+    padding-left: 20px;
+    color: #fff; 
+}
+
+#player-end .button-bar{
+    padding: 20px;
+    display: none;
+}
 #player-load{
     background-image: url("../img/system/bg.png");
     height: 100%;
@@ -115,16 +132,17 @@
     width: 50px;
 }
 
+.score-bar{
+    background-image: url("../skin/rhythm/scorebar.png");
+    width: 15px;
+    height: 300px;
+    bottom: 10px;
+    position: absolute;
+    right: 25px;
+}
+
 .player-wrap {
-    float: right;  
-    -webkit-animation-name: glow-9;
-    -webkit-animation-duration: 0.6s;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-timing-function: ease-in-out;
-    -moz-animation-name: glow-pulse;
-    -moz-animation-duration: 0.6s;
-    -moz-animation-iteration-count: infinite;
-    -moz-animation-timing-function: ease-in-out;
+    float: right;
 }
 
 .player-bg{

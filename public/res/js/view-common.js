@@ -3,6 +3,14 @@
         state: 'default', //Variations of view
     };
 
+    $.fn.countUp = function(value, duration, callback) {
+        $(this).text(value);
+        /*
+        var id = setInterval(100, function(){
+            $(this).text(value);
+        });
+        */
+    }
     /*
      * @var offset value of offset against the window
      */
